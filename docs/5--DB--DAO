@@ -1,0 +1,36 @@
+Database DAO
+    Yii::$app->db
+        db/Connection::createCommand()
+            1.Создать обьект new $this->commandClass
+            2.Передать DB class и sql запрос
+                db/Command::setSql($sql)
+                    1.Квотчим Connection::quoteSql($sql)
+                    2.Заквотчили
+                    3.Вернули запрос
+            3.Command::queryAll() Посылаем запрос в базу
+                Command::queryAll($fetchMode = null)
+                    Command::queryInternal('fetchAll', $fetchMode)
+                        Command::prepare()
+                            Connection::getSlavePdo()
+                                Connection::getMasterPdo()
+                                    Connection::open(); Открытие соединения
+                                        1.Различные проверки masters dsn pdo
+                                        2.Профилирование beginProfile($token, $category = 'application')
+                                        3.Создание pdo подключения Connection::createPdoInstance()
+                                            1.Определяем драйвер
+                                            2.Провера dsn
+                                            3.Создаем класс подключения PDO new $pdoClass($dsn, $this->username, $this->password, $this->attributes)
+                                        4.Connection::initConnection(); Инициализация соединения Напрямую с PDO
+                                            1.Обрабатывем все ошибки pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                            2.Проверка на эмулирование подготовленных запросов Connection::emulatePrepare
+                                            3.Кодировка соединения Connection::charset
+                                            4.Послать запрос $this->pdo->exec('SET NAMES utf-8')  Установки кодировки
+TODO                                        5.Запуск события self::EVENT_AFTER_OPEN
+                                        5.Конец профилирования Yii::endProfile($token, __METHOD__);
+                        Yii::beginProfile($token, 'yii\db\Command::query');
+                        Посылаем запрос $this->pdoStatement->execute();
+                        Yii::endProfile($token, 'yii\db\Command::query');
+                        return $result [] Массив результат
+
+
+

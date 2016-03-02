@@ -1,0 +1,15 @@
+Завершение обработки запроса начало 3--App--response
+index.php
+    base\Application::run()
+TODO    $this->state = 6 application has ended. контрольная точка;
+        return $response->exitStatus;
+handleFatalError()
+Logger::init()
+    register_shutdown_function Функция которая выполниться по завершению работы скрипта
+         Logger::flush()
+            1.messages - 10 сообщений логгера
+            2.Dispather::dispatch($messages, $final)
+                Target::collect()
+                    Запись в лог
+
+

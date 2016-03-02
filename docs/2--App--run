@@ -1,0 +1,56 @@
+yii\web\Application($config))->run() Запуск приложения
+TODO    1.web\Application::state = 2 application is triggering [[EVENT_BEFORE_REQUEST]]  Контрольная точка
+TODO    2.web\Application->trigger(self::EVENT_BEFORE_REQUEST); Запуск всех обработчиков Перед запросом
+            1.Component::trigger($name, Event $event = null)
+                1.Проверим поведения если есть
+                2.Создать обьект new Event
+                3.Присвоить $event->sender обьект вызвавший событие web/Application
+                4.Присвоить $event->handled = false
+                5.Присвоить имя событию $event->name = beforeRequest
+                6.Присвоить $event->data если есть
+                7.Вызвать функции call_user_func($handler[0], $event) В данном случае один обработчик который в свою очередь что то сделает
+                8.Запустим глобальные обработчики на уровне класса если есть Event::trigger($this, $name, $event);
+                9.Все обработчики запущены в том порядке в котором они определены
+TODO    3.web\Application::state = 3 application is handling the request контрольная точка подготовка к разбору запроса
+            1.Разбор запроса web/Application::handleRequest($request)
+              1.$request->resolve() Резолв запроса
+                 1.Парсинг запроса Yii::$app->getUrlManager()->parseRequest($this) получаем следующее main/views/default/index
+              2.$route = main/views/default/index Определили и записали в лог
+TODO          3.Yii::trace("Route requested: '$route'", __METHOD__);
+              4.Module::runAction($route, $params) Запуск экшена
+                1.Создание контроллера $this->createController($route)
+                2.Обьект контроллера создан
+                3.Yii::$app->controller = обьект контроллера
+                4.Запуск экшена у определенного контроллера base/Controller::runAction()
+                    1.Создание экшена createAction($id)
+                        1.Проверим свойство base/Controller::actions() на наличие экшена там
+                        2.Метод определен создадим класс экшена return new InlineAction($id, $this, $methodName)
+                            InlineAction => Action
+                                InlineAction::__construct
+                                    Action::__construct($config)
+                                        Object::__construct($config = [])
+                                            init()
+TODO                2.Yii::trace('Route to run: ' . $action->getUniqueId(), __METHOD__) В трайс
+                    3.Присвоим $this->action = $action
+                    4.$runAction = true
+TODO                5.Запуск событие EVENT_BEFORE_ACTION
+                    6.Controller::beforeAction()
+                        Проверка на корректность $this->enableCsrfValidation
+                    7.$result = InlineAction::runWithParams($params)
+                        1.Биндим параметры web/Controller->bindActionParams($this, $params)
+                            1.new \ReflectionMethod($this, $action->actionMethod)
+                            2.Возвращаем если есть параметры
+TODO                    2. Yii::trace('Running action:)
+                        3.Вызов action - return call_user_func_array([$this->controller, $this->actionMethod], $args);
+                            !!!После этого попадаем в actionIndex например и делаем что там просят
+                                там мы должны что то вернуть
+TODO                8.Запуск события self::EVENT_AFTER_ACTION
+                 5.Вернем результат работы экшена это может быть все что угодно строка,массив,json,xml
+              5. На руках результат экшена например это может быть обьект  Response
+                    далее 3--App--response
+
+
+
+base/Controller
+
+web/Controller

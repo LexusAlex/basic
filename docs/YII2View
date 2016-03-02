@@ -1,0 +1,126 @@
+После подключения ассетов они уже опубликованы
+    app\assets\AppAsset = {app\assets\AppAsset}
+    yii\web\YiiAsset = {yii\web\YiiAsset}
+    yii\web\JqueryAsset = {yii\web\JqueryAsset}
+$content то что во view
+    ------- начало страницы
+    <?php $this->beginPage() ?>
+    <!DOCTYPE html>
+        Включение буферизации
+        событие EVENT_BEGIN_PAGE
+    ----head----
+        <?php $this->head() ?>
+        </head>
+            PH_HEAD = '<![CDATA[YII-BLOCK-HEAD]]>';
+    ----body----
+        <body>
+        <?php $this->beginBody() ?>
+            PH_BODY_BEGIN = '<![CDATA[YII-BLOCK-BODY-BEGIN]]>';
+            событие EVENT_BEGIN_BODY
+    ---Контент---
+        <?= $content ?>
+    ---конец body----
+        <?php $this->endBody() ?>
+        </body>
+            событие EVENT_END_BODY
+            PH_BODY_END = '<![CDATA[YII-BLOCK-BODY-END]]>';
+            Берем ключи банглов то есть пути до классов и регистрируем registerAssetFiles($name)
+                app\assets\AppAsset
+                    [sourcePath] => /Applications/MAMP/htdocs/basic.yii2/web
+                    [css] =>[0] => css/site.css
+                    [js] =>
+                    [depends] =>[0] => yii\web\YiiAsset
+                    [basePath] => /Applications/MAMP/htdocs/app.yii2/assets/d1184088
+                    [baseUrl] => /assets/d1184088
+                    [jsOptions] => Array
+                    [cssOptions] => Array
+                    [publishOptions] => Array
+                А именно проходимся по зависимостям
+                    [depends] => yii\web\YiiAsset
+                        $this->registerAssetFiles($dep) подключаем их то есть рекурсия
+                        далее уже у каждого ассета подключаем зависымые js css
+                            registerAssetFiles(AppAsset)
+                                ($this->js as $js) Проходимся по js и подключаем registerJsFile
+                                ($this->css as $css) Проходимся по css registerCssFile а именно
+                                    registerCssFile( /assets/d1184088/css/site.css , $options = [], $key = null)
+                                        есть ли зависимости $depends
+                                            удаляем ассет который зареган
+            Все зависомости зарегистрированы
+    ----Конец страницы----
+        </html>
+        <?php $this->endPage(); ?>
+            событие EVENT_END_PAGE
+
+            ‌‌$content
+            <!DOCTYPE html>
+            <html lang="en-US">
+            <head>
+            <![CDATA[YII-BLOCK-HEAD]]>
+            </head>
+            <body>
+            <![CDATA[YII-BLOCK-BODY-BEGIN]]>
+
+            <![CDATA[YII-BLOCK-BODY-END]]>
+            </body>
+            </html>
+
+            renderHeadHtml()
+                metaTags
+                linkTags
+                cssFiles 2 уже лежат готовые линки
+                    <link href="/assets/d1184088/css/site.css" rel="stylesheet">
+                    <link href="/assets/ce1d1bff/toolbar.css" rel="stylesheet">
+                css
+                jsFiles POS_HEAD таких нет пока
+                js POS_HEAD тоже нет
+                вернили ресурсы в виде строки
+
+            renderBodyBeginHtml()
+                jsFiles POS_BEGIN
+                js POS_BEGIN
+                вернули ресурсы в виде строки
+
+            renderBodyEndHtml($ajaxMode)
+                jsFiles POS_END
+                    /assets/ce1d1bff/toolbar.js = "<script src="/assets/ce1d1bff/toolbar.js"></script>"
+                    /assets/acdd029c/yii.js = "<script src="/assets/acdd029c/yii.js"></script>"
+                    /assets/7065be71/jquery.js = "<script src="/assets/7065be71/jquery.js"></script>"
+
+                if ($ajaxMode) Допустим true
+                    js POS_END
+                        'js code'
+                    js POS_READY
+                    js POS_LOAD
+                        Добавляем скрипт в конец всех которые есть сейчас
+                        ....
+                        ...
+                        ..
+                        js code
+                false
+                    js POS_END
+                    js POS_READY jQuery(document).ready(function () {}
+                    js POS_LOAD jQuery(window).load(function () {}
+            Теперь заменяем CD Data блоки на ресуры
+                ‌‌$output
+                <!DOCTYPE html>
+                <html lang="en-US">
+                <head>
+                 <link href="/assets/d1184088/css/site.css" rel="stylesheet">
+                <link href="/assets/ce1d1bff/toolbar.css" rel="stylesheet"></head>
+                <body>
+                <script src="/assets/7065be71/jquery.js"></script>
+                <script src="/assets/acdd029c/yii.js"></script>
+                <script src="/assets/ce1d1bff/toolbar.js"></script>
+                <script type="text/javascript">
+                    function show1(){}
+                </script>
+                </body>
+                </html>
+далее событие after Render
+далее событие after Action
+                 для каждого модуля тоже afterAction
+
+отправка ответа
+
+
+

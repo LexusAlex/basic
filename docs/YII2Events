@@ -1,0 +1,125 @@
+Component Привязать событие
+$name имя события
+$data данные обьекту события
+$handler обработчик
+
+\Yii::$app->on(\yii\base\Application::EVENT_BEFORE_REQUEST, function ($event) {
+    var_dump($event);
+},[4]);
+
+class b{}
+yii\base\Event::on('b','bar', function ($event) {
+    echo 'dfgdfsg';  // выводит "app\components\Foo"
+});
+yii\base\Event::trigger('b','bar');
+
+Сейчас на руках
+    Создан обьект yii/web/Application
+    Установлен модуль [yii\web\Application]
+    Установка путей BasePath vendorPath runtimePath читаем из конфига
+    Установка временной зоны и прочего
+    coreComponents 'log' 'view' 'formatter''i18n''mailer'.....
+    Зарегистрированны функции обработки ошибок,исключений,фатальных ошибок
+    Конфигурирование компонентов
+    $request Текущий запрос в переменной
+    @webroot @web
+    Далее событие beforeRequest
+1.beforeRequest Перед запросом base/Application
+    Разбор запроса
+    Определение контроллера
+    Создание экшена            
+2.beforeAction Перед запуском экшена web/Controller
+    call_user_func_array запуск
+    render(index)
+3.BEFORE_RENDER base/View
+4.AFTER_RENDER base/View
+    Зарегали ресурсы
+5.BEGIN_PAGE base/View
+6.BEGIN_BODY web/View
+7.END_BODY web/View
+8.END_PAGE base/View
+9.afterAction web/Controller
+    Сырой текст ответа
+    создание Response обьекта ответа
+    Определили формат
+10.AfterRequest base/Application
+11.BEFORE_SEND web/Response
+12.AFTER_PREPARE web/Response
+    Посылаем заголовки
+    Куки
+    Контент
+13.AFTER_SEND web/Response
+Все отправлено
+
+
+Добавим обработчик в массив событий
+
+public function on(beforeRequest, $handler, $data = null, $append = true)
+    {
+        $this->ensureBehaviors(); Проверим поведения присоединенные к компоненту
+        if ($append || empty($this->_events[$name])) {
+            $this->_events[$name][] = [$handler, $data];
+        } else {
+            array_unshift($this->_events[$name], [$handler, $data]);
+        }
+    }
+
+Запуск события
+public function trigger(beforeRequest, Event $event = null)
+    !empty($this->_events[$name] Проверим что событие есть в масиве событий
+        $event = new Event; создаем обьект события
+            создали обьект
+                EVENT	=>	(
+                    _events	=>
+                    name	=> beforeRequest
+                    sender	=> yii/web/Application Класс запустивший событие
+                    handled	=>	false
+                    data	=>
+                )
+
+
+\Yii::$app->view->on(View::EVENT_BEFORE_RENDER, function ($event) {
+            echo $event->name.'<br>';
+            echo $event->sender->className();
+        });
+        \Yii::$app->view->on(View::EVENT_AFTER_RENDER, function ($event) {
+            echo $event->name.'<br>';
+        });
+        \Yii::$app->view->on(View::EVENT_BEGIN_BODY, function ($event) {
+            echo $event->name.'<br>';
+        });
+        \Yii::$app->view->on(View::EVENT_END_BODY, function ($event) {
+            echo $event->name.'<br>';
+        });
+        \Yii::$app->view->on(View::EVENT_BEGIN_PAGE, function ($event) {
+            echo $event->name.'<br>';
+        });
+        \Yii::$app->view->on(View::EVENT_END_PAGE, function ($event) {
+            echo $event->name.'<br>';
+        });
+
+'on beforeRequest' => function ($event) {
+        echo $event->name.'<br>';
+        //\yii\helpers\VarDumper::dump(Yii::$app,10,true);
+    },
+    'on beforeAction' => function ($event) {
+       /* if (некоторое условие) {
+            $event->isValid = false;
+        } else {
+        }*/
+        echo $event->name.'<br>';
+    },
+    'on afterAction' => function ($event) {
+        /* if (некоторое условие) {
+             $event->isValid = false;
+         } else {
+         }*/
+        echo $event->name.'<br>';
+    },
+    'on afterRequest' => function ($event) {
+        /* if (некоторое условие) {
+             $event->isValid = false;
+         } else {
+         }*/
+        echo $event->name.'<br>';
+    },                            

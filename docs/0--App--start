@@ -1,0 +1,189 @@
+Запуск абстрактного приложения на примере Yii
+Корень web сайта index.php все запросы отсюда
+.htaccess
+    Options +FollowSymLinks
+    IndexIgnore */*
+
+    RewriteEngine on
+
+    # if a directory or a file exists, use it directly
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # otherwise forward it to index.php
+    RewriteRule . index.php
+
+1. Установка и определение констант
+2. Подключение файлов require_once __DIR__ . '/composer' . '/autoload_real.php'; и require(__DIR__ . '/BaseYii.php')
+3. Определение функции автозагрузчика классов __autoload() (Basefile.php)  spl_autoload_register(['Yii', 'autoload'], true, true);
+4. Подключить фаил со списком классов ядра require(__DIR__ . '/classes.php');
+5. Определение контейнера Yii::$container = new yii\di\Container();
+        Как работает BaseYii::autoload($className)
+        1.Проверим static::$classMap[$className] на наличие подключаемго класса
+        2.Определяем путь к файлу используя alias(@) или отсекая \\
+        3.Фаил определен include($classFile)
+        Autoload будет работать для всех классов которые опрелелны в $classMap
+6. Container => Component => Object => Configurable Последовательное подключение благодаря наследованию
+7. Проверка на существование класса трейта интерфейса(функции php) для каждого из подключенных в BaseYii::autoload
+8. Запуск конструктора обьекта Object::__construct($config = [])
+        А именно инициализация обьекта с переданной конфигурацией
+        И вызов метода init()
+        Так $config не передан на этом этапе то запускаем Object::init()
+9. Object::init() В данном классе он пустой
+10. Подключаем конфигурацию приложения ее нужно перед этим собрать в массив require(__DIR__ . '/../basic.yii2/config/web.php')
+11. Вернуть массив из файла $config
+  Создание обьекта приложения yii\web\Application($config)
+12.(new yii\web\Application($config))->run();
+13. web\Application => base\Application => Module => ServiceLocator => ( Component ... цепочка уже подключена)
+14. base\Application::__construct($config = []) Срабатывание констуктора
+         1.Yii::$app = $this Обьект приложения в статическое свойство класса
+         2.Module::setInstance($this обьект приложения);
+            1.if $instance === null ...  но в данном случае далее instance это обьект
+            2.Yii::$app->loadedModules[] - Загруженные модули там и будет обьект приложения как модуль loadedModules[1]
+TODO     3.web\Application::state = 0 application just started  Контрольная точка
+         4.base\Application::preInit(&$config); Прединициализация c переданным конфигом
+            1. Проверка обязательных параметров как id basePath далее нужно установить пути
+            2. base/Application::setBasePath($path) установка базового пути приложения
+                1.Module::setBasePath($path)
+                    1.Yii::getAlias($path) и realpath($path) и is_dir($path)  Проверка на то что путь директория существует
+                    2. Все впорядке тогда Module::$_basePath присваеваем путь
+            3.Yii::setAlias('@app') Установим alias для корневой директории
+            4. unset($config['basePath']) удалим из конфига эту запись
+            5. Весь процесс делаем для vendorPath runtimePath timeZone временная зона
+            6. Читаем из конфига Компоненты ядра web/Application::coreComponents() base/Application::coreComponents()
+                а именно Устанавливаем class для компонентов ядра важным тут является свойство class и для кастомных компонентов если определены в конфиге
+                Можно задать свои компоненты
+                                'log' => ['class' => 'yii\log\Dispatcher'],
+                                'view' => ['class' => 'yii\web\View'],
+                                'formatter' => ['class' => 'yii\i18n\Formatter'],
+                                'i18n' => ['class' => 'yii\i18n\I18N'],
+                                'mailer' => ['class' => 'yii\swiftmailer\Mailer'],
+                                'urlManager' => ['class' => 'yii\web\UrlManager'],
+                                'assetManager' => ['class' => 'yii\web\AssetManager'],
+                                'security' => ['class' => 'yii\base\Security'],
+                                'request' => ['class' => 'yii\web\Request'],
+                                'response' => ['class' => 'yii\web\Response'],
+                                'session' => ['class' => 'yii\web\Session'],
+                                'user' => ['class' => 'yii\web\User'],
+                                'errorHandler' => ['class' => 'yii\web\ErrorHandler'],
+         5. Регистрируем ErrorHandler компонент base/Application->registerErrorHandler($config)
+                1.Проверим что включена пользовательская обработка ошибок YII_ENABLE_ERROR_HANDLER
+                2.Забираем из конйига класс $config['components']['errorHandler']['class']
+                3.ServiceLocator::set('errorHandler', $config['components']['errorHandler']); Регистрируем компонент в приложении
+                    При регистрации компонента передается id компонента и массив конфигурации
+                    Может быть передано след способами
+                        $locator->set('cache', 'yii\caching\ApcCache');
+                        $locator->set('db', [конфиг]);
+                        $locator->set('sear', function(){return new 'your/Sear'});
+                        $locator->set('pageCache', new FileCache);
+                    1.Удаляем компонент errorHandler unset() если он там был
+                    2.Установили зависимость в ServiceLocator->_definitions это массив то есть зависимость приложения от компонента
+                4.unset($config['components']['errorHandler'] Удалим из конфига так как он уже зарегистрирован
+                5.обратится можно так ServiceLocator->get('errorHandler'); или $error = $locator->errorHandler
+                    ServiceLocator->get() Что тут происходит
+                         1. Проверим что компонент есть _components[$id] если его нет
+                         2. То проверяем $this->_definitions[$id]
+                         3. Проверим массив конфигурации компонента на обьект,замыкание если это не то и не другое
+                         4. Создаем новый обьект с переданной конфигурацией Yii::createObject($definition)
+                                1.is_string($type) is_array($type) Проверим на строку на массив
+                                2.удалим класс unset($type['class'])
+                                3.return YiiBase::$container->get(ErrorHandler, [], [конфиг])
+                                        Container::get() Внендение зависимостей
+                                            1.Container::_singletons[$class] там пусто
+                                            2.Container::build($class, $params, $config)
+                                                1.$this->getDependencies($class) берем завимости
+                                                    $dependencies = []
+                                                    $reflection = new ReflectionClass($class); будет вызван spl_autoload_call
+                                                        YiiBase::autoload ErrorHandler
+                                                        web/ErrorHandler => base/ErrorHandler
+                                                    $constructor = Object::__construct
+                                                Зависимости определены
+                                                2.empty($config) Конфиг обьекта
+                                                3.Object::__construct($config)
+                                                            Yii::configure(ErrorHandler, $config) Переопредление свойств обьекта переданными свойствами
+                                                            Object->init();
+        6.$this->getErrorHandler()->register() Регистрация обработчика ошибок
+            base/ErrorHandler
+            1.ini_set('display_errors', false); Отключаем ошибки
+            2.set_exception_handler([$this, 'handleException']); метод для обработки исключений
+            3.set_error_handler([$this, 'handleError']); обработчик ошибок
+            4.register_shutdown_function([$this, 'handleFatalError']); функция для ловли фатальных ошибок
+            !!! Теперь все ошибки отлавливаться
+         7.Запуск конструктора обьекта Component::__construct($config);
+            Object::__construct($config = [])
+                Наделяем текущий обьект Application Свойствами конфигурации
+                Попалось свойство modules которое приватное вызывается магический метод Component::__set($name, $value)
+                    1. Проверим что есть сеттер определим setmodules()
+                    2. Вызовем с переданной конфигурацией модулей
+                        Module::setModules($modules)
+                            В итоге все модули которые определены теперь в Module::modules
+                    Вернем пустоту
+                свойство components тоже закрытое тоже вызывается Component::__set($name, $value)
+                    ServiceLocator::setComponents($components) здесь будут создаваться компоненты с переданной конфигурацией
+                        Созданы все определенные компоненты ServiceLocator::_definition 15 массивов
+                        !!! Пока определены только зависимости
+                    Вернем пустоту
+                base/Application::init() далее 1--App--init
+
+
+Какие методы были использованы
+BaseYii
+        $classMap = [] Массив классов ядра
+        $_logget  Обьект логгера
+        $app Приложение
+        $aliases Псевдонимы
+        $container Контейнер yii\di\Container()
+        getAlias() Получить путь по алиасу
+        setAlias() Установить алиас
+        autoload($className) Автозагрузчик классов
+        createObject($type, array $params = []) создание обьекта
+Object
+        className() Имя класса
+        __construct($config = [])
+        init()
+Component
+        $_events = [] События
+        $_behaviors; Поведения
+        hasProperty() Проверка на свойство
+        hasMethod() Проверка на метод
+        behaviors() Массив поведений присоединенных к компоненту
+        hasEventHandlers($name)
+        on() Присоединяет обработчик к событию
+        off() Отсоединяет обработчик от события
+        trigger() Запуск обработчиков события
+
+        getBehavior($name)
+        getBehaviors()
+        attachBehavior($name, $behavior)
+        attachBehaviors($behaviors)
+        detachBehavior($name)
+        detachBehaviors()
+        ensureBehaviors()
+Container
+        $definitions
+        get()
+        set()
+ServiceLocator
+        $components
+        get()
+        set()
+Module
+        $aliases
+        $basePath
+        $controllerPath
+        $layoutPath
+        $modules
+        $uniqueId
+        $viewPath
+        $id
+        $module
+        $layout
+        $controllerMap
+        $controllerNamespace
+        $defaultRoute = 'default'
+        __construct
+        init()
+        runAction()
+        createController($route)
+
+

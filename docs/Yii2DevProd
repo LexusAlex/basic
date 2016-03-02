@@ -1,0 +1,1578 @@
+Разворачивание нового проекта advansed шаблон
+
+1.composer global require "fxp/composer-asset-plugin:~1.1.1"
+composer create-project --prefer-dist yiisoft/yii2-app-advanced yii-application
+
+2.запуск php /path/to/yii-application/init
+3.созданть новую базу данных и исправить common/config/main-local.php
+    'db' => [
+                'class' => 'yii\db\Connection',
+                'dsn' => 'mysql:host=127.0.0.1;dbname=yii2_template',
+                'username' => 'root',
+                'password' => 'root',
+                'charset' => 'utf8',
+            ],
+4.применить миграции ./yii migrate/up
+5.занести в гит
+------о composer--------
+ Команда composer install делает следующее:
+
+    Проверяет существует ли composer.lock
+    если нет, резолвит зависимости и создаёт его
+    если composer.lock существует, устанавливает версии, указанные в нём
+
+Команда composer update:
+
+    Проверяет composer.json
+    Определяет последние версии на основе указанных в этом файле
+    Устанавливает последние версии
+    Обновляет composer.lock в соответствии с установленными
+
+
+Установка composer
+1. curl -sS https://getcomposer.org/installer | php или php -r "readfile('https://getcomposer.org/installer');" | php
+2. перенести полученный файил mv composer.phar /usr/local/bin/composer
+3.Это пакет для composer позволяющий управлять npm и bower пакетами. composer global require "fxp/composer-asset-plugin:~1.0.3"
+
+-----------------------------
+Работа yii2
+1.defined('YII_DEBUG') or define('YII_DEBUG', true); включение режима дебага
+  defined('YII_ENV') or define('YII_ENV', 'dev'); окружение dev/prod/test
+
+Регистрируют загрузчик классов Composer;
+Подключают файл класса
+Загружают конфигурацию приложения;
+Подключение файлов
+
+/vendor/autoload.php'
+/vendor/yiisoft/yii2/Yii.php'
+/common/config/bootstrap.php'
+    Yii::setAlias('common', dirname(__DIR__));
+    Yii::setAlias('frontend', dirname(dirname(__DIR__)) . '/frontend');
+    Yii::setAlias('backend', dirname(dirname(__DIR__)) . '/backend');
+    Yii::setAlias('console', dirname(dirname(__DIR__)) . '/console');
+/backend/config/bootstrap.php'
+    ----
+/common/config/main.php'
+/common/config/main-local.php'
+/backend/config/main.php'),
+/backend/config/main-local.php')
+Алиасы
+    @yii - директория фрэймворка.
+    @app - корневая директория выполняемого в данный момент приложения.
+    @common - директория common.
+    @frontend - директория веб-приложения frontend.
+    @backend - директория веб-приложения backend.
+    @console - директория console.
+    @runtime - директория runtime исполняемого приложения.
+    @vendor - директория vendor, содержащая пакеты загруженные Composer'ом.
+    @bower - директория vendor, содержащая пакеты bower.
+    @npm - директория vendor, содержащая пакеты npm.
+    @web - базовый URL исполняемого веб-приложения.
+    @webroot - корневая веб-директория исполняемого веб-приложения.
+
+2.Наследование основного обькта приложения
+interface Configurable
+class Object
+class Component
+class ServiceLocator для регистрации компонентов
+class Module
+abstract class Application
+class Application
+
+3.$application = new yii\web\Application($config); Первоначальная настройка
+public function __construct($config = [])
+    {
+        Yii::$app = $this;
+        $this->setInstance($this);
+                public static function setInstance($instance) загрузка модулей
+                    {
+                        if ($instance === null) {
+                            unset(Yii::$app->loadedModules[get_called_class()]); Удаляем все модули
+                        } else {
+                            Yii::$app->loadedModules[get_class($instance)] = $instance; загрузка модулей принадлежащей к текущему обьекту
+                            ------
+                            свойство может быть таким
+                            [loadedModules] => [
+                                    'yii\\web\\Application' => yii\web\Application#1(...)
+                                    'yii\\debug\\Module' => yii\debug\Module(...)
+                                    'yii\\gii\\Module' => yii\gii\Module(...)
+                                ]
+                            -----------------------
+                        }
+                    }
+
+4.----application just started--------
+        $this->state = self::STATE_BEGIN; Старт приложения, установка путей, временной зоны, сливание компонентов ядра с пользовательскими компонентами, регистрация обработчика ошибок
+
+        $this->preInit($config);
+                public function preInit(&$config) Преинициализация приложения установка свойств и путей если не установлены
+                    {
+                        if (!isset($config['id'])) { обьязательный атрибут id  название приложения
+                            throw new InvalidConfigException('The "id" configuration for the Application is required.');
+                        }
+                        if (isset($config['basePath'])) { обязательный атрибут basePath директория
+                            $this->setBasePath($config['basePath']);
+                                    public function setBasePath($path) Установка базовой директории
+                                        {
+                                            parent::setBasePath($path);
+                                                    public function setBasePath($path) Установка базовой директории для модуля
+                                                        {
+                                                            $path = Yii::getAlias($path);
+                                                            $p = realpath($path);
+                                                            if ($p !== false && is_dir($p)) {
+                                                                $this->_basePath = $p;
+                                                            } else {
+                                                                throw new InvalidParamException("The directory does not exist: $path");
+                                                            }
+                                                        }
+                                            Yii::setAlias('@app', $this->getBasePath()); Установка алиаса @app корень
+                                                -----
+                                                в данном случае это '/Applications/MAMP/htdocs/yii2-app-advanced/backend'
+                                        }
+                            unset($config['basePath']);
+                        } else {
+                            throw new InvalidConfigException('The "basePath" configuration for the Application is required.');
+                        }
+
+                        if (isset($config['vendorPath'])) {
+                            $this->setVendorPath($config['vendorPath']); Установка директории вендоров
+                                    public function setVendorPath($path) Сторонние файлы
+                                        {
+                                            $this->_vendorPath = Yii::getAlias($path); Корневая диретория вендоров далее установка алиасов
+                                            Yii::setAlias('@vendor', $this->_vendorPath);
+                                            Yii::setAlias('@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower');
+                                            Yii::setAlias('@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm');
+                                        }
+                            unset($config['vendorPath']);
+                        } else {
+                            // set "@vendor"
+                            $this->getVendorPath();
+                        }
+                        if (isset($config['runtimePath'])) { директория временных файлов
+                            $this->setRuntimePath($config['runtimePath']);
+                                public function setRuntimePath($path)
+                                    {
+                                        $this->_runtimePath = Yii::getAlias($path);
+                                        Yii::setAlias('@runtime', $this->_runtimePath);
+                                    }
+                            unset($config['runtimePath']);
+                        } else {
+                            // set "@runtime"
+                            $this->getRuntimePath();
+                        }
+
+                        if (isset($config['timeZone'])) { Установка временной зоны
+                            $this->setTimeZone($config['timeZone']);
+                                public function setTimeZone($value)
+                                    {
+                                        date_default_timezone_set($value); Установка временной зоны для всех функций даты и времени в скрипте
+                                    }
+                            unset($config['timeZone']);
+                        } elseif (!ini_get('date.timezone')) {
+                            $this->setTimeZone('UTC'); если ничего не поддерживается то UTC
+                        }
+
+                        // merge core components with custom components
+                        foreach ($this->coreComponents() as $id => $component) {
+                                public function coreComponents() компоненты ядра
+                                    {
+                                        return [
+                                            'log' => ['class' => 'yii\log\Dispatcher'],
+                                            'view' => ['class' => 'yii\web\View'],
+                                            'formatter' => ['class' => 'yii\i18n\Formatter'],
+                                            'i18n' => ['class' => 'yii\i18n\I18N'],
+                                            'mailer' => ['class' => 'yii\swiftmailer\Mailer'],
+                                            'urlManager' => ['class' => 'yii\web\UrlManager'],
+                                            'assetManager' => ['class' => 'yii\web\AssetManager'],
+                                            'security' => ['class' => 'yii\base\Security'],
+                                        ];
+                                    }
+                                    public function coreComponents()
+                                        {
+                                            return array_merge(parent::coreComponents(), [
+                                                'request' => ['class' => 'yii\web\Request'],
+                                                'response' => ['class' => 'yii\web\Response'],
+                                                'session' => ['class' => 'yii\web\Session'],
+                                                'user' => ['class' => 'yii\web\User'],
+                                                'errorHandler' => ['class' => 'yii\web\ErrorHandler'],
+                                            ]);
+                                        }
+                            if (!isset($config['components'][$id])) { если нет компонента в пользовательской конфигурации то и используем по умолчанию
+                                $config['components'][$id] = $component;
+                            } elseif (is_array($config['components'][$id]) && !isset($config['components'][$id]['class'])) {
+                                $config['components'][$id]['class'] = $component['class'];
+                            }
+                        }
+                    }
+
+        $this->registerErrorHandler($config); регистрируем обработчик ошибок
+                protected function registerErrorHandler(&$config)
+                    {
+                        if (YII_ENABLE_ERROR_HANDLER) { включена обработка ошибок
+                            if (!isset($config['components']['errorHandler']['class'])) {
+                                echo "Error: no errorHandler component is configured.\n"; Не сконфигурирован errorHandler то прерываем с ошибкой
+                                exit(1);
+                            }
+                            $this->set('errorHandler', $config['components']['errorHandler']); Установка компонента с требуемой конфигурацией
+                                public function set($id, $definition)
+                                    {
+                                        if ($definition === null) {
+                                            unset($this->_components[$id], $this->_definitions[$id]);
+                                            return;
+                                        }
+
+                                        unset($this->_components[$id]);
+
+                                        if (is_object($definition) || is_callable($definition, true)) {
+                                            // an object, a class name, or a PHP callable
+                                            $this->_definitions[$id] = $definition;
+                                        } elseif (is_array($definition)) {
+                                            // a configuration array
+                                            if (isset($definition['class'])) {
+                                                $this->_definitions[$id] = $definition;
+                                            } else {
+                                                throw new InvalidConfigException("The configuration for the \"$id\" component must contain a \"class\" element.");
+                                            }
+                                        } else {
+                                            throw new InvalidConfigException("Unexpected configuration type for the \"$id\" component: " . gettype($definition));
+                                        }
+                                    }
+                            unset($config['components']['errorHandler']);
+                            $this->getErrorHandler()->register(); регистрируем обработчик ошибок и исключений который перезватывает все
+                                public function register()
+                                    {
+                                        ini_set('display_errors', false); отключаем вывод на экран
+                                        set_exception_handler([$this, 'handleException']);
+                                        if (defined('HHVM_VERSION')) {
+                                            set_error_handler([$this, 'handleHhvmError']);
+                                        } else {
+                                            set_error_handler([$this, 'handleError']);
+                                        }
+                                        if ($this->memoryReserveSize > 0) {
+                                            $this->_memoryReserve = str_repeat('x', $this->memoryReserveSize);
+                                        }
+                                        register_shutdown_function([$this, 'handleFatalError']); перехват фатальных ошибок
+
+
+                                    }
+                        }
+                    }
+
+        Component::__construct($config);
+            public function __construct($config = [])
+                {
+                    if (!empty($config)) { конфигурация приложения
+                        Yii::configure($this, $config); берем обект и его конфигурацию
+                    }
+                    $this->init(); Инициализация приложения
+
+                    public function init()
+                        {
+                        }
+                    ----
+                        инициализация модуля
+                        public function init()
+                            {
+                                if ($this->controllerNamespace === null) {
+                                    $class = get_class($this);
+                                    if (($pos = strrpos($class, '\\')) !== false) {
+                                        $this->controllerNamespace = substr($class, 0, $pos) . '\\controllers';
+                                    }
+                                }
+                            }
+5 ----- application is initializing --------------------
+                                public function init() Инициализация приложения
+                                {
+                                    $this->state = self::STATE_INIT;
+                                    protected function bootstrap() Установка алиасов
+                                        {
+                                            $request = $this->getRequest();
+                                            Yii::setAlias('@webroot', dirname($request->getScriptFile()));
+                                            Yii::setAlias('@web', $request->getBaseUrl());
+
+                                            parent::bootstrap();
+                                        }
+                                    $this->bootstrap();
+                                            protected function bootstrap() работаем с расширениями и дополнениями
+                                                {
+                                                    if ($this->extensions === null) {
+                                                        -----
+                                                        как выглядит свойство
+                                                        [extensions] => [
+                                                                'yiisoft/yii2-swiftmailer' => [...]
+                                                                'yiisoft/yii2-codeception' => [...]
+                                                                'yiisoft/yii2-bootstrap' => [...]
+                                                                'yiisoft/yii2-debug' => [...]
+                                                                'yiisoft/yii2-gii' => [...]
+                                                                'yiisoft/yii2-faker' => [...]
+                                                            ]
+                                                            --------------
+                                                        $file = Yii::getAlias('@vendor/yiisoft/extensions.php');
+                                                        $this->extensions = is_file($file) ? include($file) : []; подключаем его
+                                                    }
+                                                    foreach ($this->extensions as $extension) { расширения
+                                                        if (!empty($extension['alias'])) {
+                                                            foreach ($extension['alias'] as $name => $path) {
+                                                                Yii::setAlias($name, $path);
+                                                            }
+                                                        }
+                                                        if (isset($extension['bootstrap'])) {
+                                                            $component = Yii::createObject($extension['bootstrap']);
+                                                            if ($component instanceof BootstrapInterface) {
+                                                                Yii::trace("Bootstrap with " . get_class($component) . '::bootstrap()', __METHOD__);
+                                                                $component->bootstrap($this);
+                                                            } else {
+                                                                Yii::trace("Bootstrap with " . get_class($component), __METHOD__);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    foreach ($this->bootstrap as $class) { бутстрап компоненты которые будут предзагруженны
+                                                        ------
+                                                        [bootstrap] => [
+                                                                0 => 'log'
+                                                                1 => 'debug'
+                                                                2 => 'gii'
+                                                            ]
+                                                          ------
+                                                        $component = null;
+                                                        if (is_string($class)) {
+                                                            if ($this->has($class)) {
+                                                                $component = $this->get($class);
+                                                            } elseif ($this->hasModule($class)) {
+                                                                $component = $this->getModule($class);
+                                                            } elseif (strpos($class, '\\') === false) {
+                                                                throw new InvalidConfigException("Unknown bootstrapping component ID: $class");
+                                                            }
+                                                        }
+                                                        if (!isset($component)) {
+                                                            $component = Yii::createObject($class);
+                                                        }
+
+                                                        if ($component instanceof BootstrapInterface) {
+                                                            Yii::trace("Bootstrap with " . get_class($component) . '::bootstrap()', __METHOD__);
+                                                            $component->bootstrap($this);
+                                                        } else {
+                                                            Yii::trace("Bootstrap with " . get_class($component), __METHOD__);
+                                                        }
+                                                    }
+                                                }
+                                }
+                }
+    }
+$application->run();
+6 запуск приложения
+public function run()
+    {
+        try {
+
+7. ------ EVENT_BEFORE_REQUEST  $this->state = self::STATE_BEFORE_REQUEST;
+                             К этому моменту обьект создан и проинициализирован
+                                $this->trigger(self::EVENT_BEFORE_REQUEST);
+
+8.--------HANDLING_REQUEST        $this->state = self::STATE_HANDLING_REQUEST;
+                            Обработка теущего запроса
+                                $response = $this->handleRequest($this->getRequest());
+
+9. ------ STATE_AFTER_REQUEST   $this->state = self::STATE_AFTER_REQUEST;
+                                $this->trigger(self::EVENT_AFTER_REQUEST);
+
+10. ----- SENDING_RESPONSE      $this->state = self::STATE_SENDING_RESPONSE;
+                                посылка ответа клиету
+                                $response->send();
+
+11. ------ STATE_END            $this->state = self::STATE_END;
+
+                                return $response->exitStatus;
+
+        } catch (ExitException $e) {
+
+            $this->end($e->statusCode, isset($response) ? $response : null);
+            return $e->statusCode;
+
+        }
+    }
+-----------------------------------
+            пути
+           VarDumper::dump(Yii::getAlias('@app'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@vendor'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@bower'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@npm'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@runtime'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@webroot'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::getAlias('@web'),2,true);
+            echo '<br>';
+            VarDumper::dump(Yii::$app->state,2,true);
+            //VarDumper::dump(Yii::getAlias($fd,2,true);
+            //VarDumper::dump(Yii::getAlias(array_key_exists('key',null)),2,true);
+
+---------------
+phpDoc
+
+@api    @api
+@author  @author My Name <my.name@example.com>
+@category @category MyCategory
+@copyright @copyright 1997-2005 The PHP Group
+@deprecated @deprecated 1.0.0 No longer used by internal code and not recommended.
+@example @example http://example.com/example2.phps Counting in action by a 3rd party.
+@filesource @filesource
+@global
+@ignore
+@internal
+@license @license http://opensource.org/licenses/gpl-license.php GNU Public License
+@link @link http://example.com/my/bar Documentation of Foo.
+@method @method setString(integer $integer)
+@package @package PSR\Documentation\API
+@param @param mixed[] $items Array structure to count the elements of.
+@property @property string $myProperty
+@property-read @property-read string $myProperty
+@property-write @property-write string $myProperty
+@return @return integer Indicates the number of items.
+@see @see MyClass::setItems()       To set the items for this collection.
+@since  @since 1.0.1 Added the $a argument.
+@source @source 2 1 Check that ensures lazy counting.
+@subpackage @subpackage Documentation\API
+@throws @throws InvalidArgumentException if the provided argument is not of type 'array'.
+@todo @todo add an array parameter to count
+@uses  @uses MyClass::$items to retrieve the count from.
+@var @var string $name        Should contain a description
+@version @version 1.0.1
+
+-----------------------------------
+обработка текущего запроса в yii2
+HANDLING_REQUEST
+$this->state = self::STATE_HANDLING_REQUEST;
+$response = $this->handleRequest($this->getRequest());
+-----------стадии работы приложения------
+STATE_BEGIN = 0;
+STATE_INIT = 1;
+STATE_BEFORE_REQUEST = 2; до начала обработки запроса
+STATE_HANDLING_REQUEST = 3;
+STATE_AFTER_REQUEST = 4;
+STATE_SENDING_RESPONSE = 5;
+STATE_END = 6;
+-----------------------------------
+$route, $params - парсим это из запроса
+сначала происходит простмотр массива catchAll[] если там что то есть то текущий запрос на этот роут
+$this->requestedRoute - текущий запрос
+$result = $this->runAction($route, $params)
+ответ сформирован в виде обьекта response
+теперь ответ клиенту $response->send();
+---------------------------------------
+метод render() вывод результата
+Controller
+public function render($view, $params = [])
+    {   //получчаем обьект View у него запускаем рендер
+        $content = $this->getView()->render($view, $params, $this); в данный момент тут контект без шаблона
+            public function render($view, $params = [], $context = null) // имя файла вида , параметры, контекст - обьект контроллера
+                {
+                    $viewFile = $this->findViewFile($view, $context); парсим фаил , здесь у нас путь к файлу
+                    return $this->renderFile($viewFile, $params, $context); теперь происходит рендер файла
+                        public function renderFile($viewFile, $params = [], $context = null)
+                            {
+                                $viewFile = Yii::getAlias($viewFile); определяем если это алиас
+                                // проверки на тему и на фаил
+                                if ($this->theme !== null) {
+                                    $viewFile = $this->theme->applyTo($viewFile);
+                                }
+                                if (is_file($viewFile)) {
+                                    $viewFile = FileHelper::localize($viewFile);
+                                } else {
+                                    throw new InvalidParamException("The view file does not exist: $viewFile");
+                                }
+
+                                $oldContext = $this->context;
+                                if ($context !== null) {
+                                    $this->context = $context;
+                                }
+                                $output = '';
+                                $this->_viewFiles[] = $viewFile;
+
+                                if ($this->beforeRender($viewFile, $params)) {
+                                    Yii::trace("Rendering view file: $viewFile", __METHOD__);
+                                    $ext = pathinfo($viewFile, PATHINFO_EXTENSION);
+                                    if (isset($this->renderers[$ext])) {
+                                        if (is_array($this->renderers[$ext]) || is_string($this->renderers[$ext])) {
+                                            $this->renderers[$ext] = Yii::createObject($this->renderers[$ext]);
+                                        }
+                                        /* @var $renderer ViewRenderer */
+                                        $renderer = $this->renderers[$ext];
+                                        $output = $renderer->render($this, $viewFile, $params);
+                                    } else {
+                                        $output = $this->renderPhpFile($viewFile, $params);
+                                    }
+                                    $this->afterRender($viewFile, $params, $output);
+                                }
+
+                                array_pop($this->_viewFiles);
+                                $this->context = $oldContext;
+
+                                return $output;
+                            }
+                }
+        return $this->renderContent($content);
+        теперь нужно обернуть контент в шаблон то есть найти фаил шаблона
+            public function renderContent($content)
+                {
+                    $layoutFile = $this->findLayoutFile($this->getView()); определяем путь к шаблону
+                    if ($layoutFile !== false) {
+                        //если все нормально фаил найден , то делаем похожую операцию как с контентом,
+                        а именно , берем шаблон добавляем туда контент и возвращаем вывод
+                        return $this->getView()->renderFile($layoutFile, ['content' => $content], $this);
+                    } else {
+                        return $content;
+                    }
+                }
+    }
+----------------------------------------------
+Геттеры и сеттеры использование
+
+private $_test;
+    public function getTest(){ читаем
+        return $this->_test;
+    }
+    public function setTest($val){ записываем в свойство
+        $this->_test = $val;
+    }
+
+        VarDumper::dump($this->getTest(),1,true);
+        VarDumper::dump($this->setTest('string'),1,true);
+        VarDumper::dump($this->getTest(),1,true);
+        VarDumper::dump($this->test,1,true);
+        VarDumper::dump(isset($this->test),1,true);
+        //unset($this->test);
+        //VarDumper::dump($this->test(),1,true);
+        $var = clone $this;
+-----------------------------------------------
+Магические методы yii2
+__get($name) - будет выполнен при чтении данных из недоступных свойств.
+    Если метод с названием getName существует то вызывается этот метод у класса
+    Тоже самое происходит с поведением будет вызван метод у него
+__set($name, $value) При попытке записать в свойство
+    Если метод есть то просто вызваем этот метод и присваиваем значение
+    Если это событие on XXX
+    Если это поведение as XXX
+    Поведение
+------------------------------------------------
+События
+
+
+// обработчик - глобальная функция
+        $this->on('EVT', 'backend\controllers\evt');
+
+// обработчик - метод объекта
+        $this->on('EVT', [$this, 'ev'],'данные которые могут использоваться');
+
+// обработчик - анонимная функция
+        $this->on('EVT', function ($event) {
+            echo 'событие из  анонимной функции '.'<br>';
+        },null,false);
+        //$this->off('EVT');
+        $this->off('EVT','backend\controllers\evt');
+        Event::on($this::className(),'EVT', 'backend\controllers\evt');
+        Event::off($this::className(),'EVT');// только одно которое навесили
+        $this->trigger('EVT');
+
+
+    public function ev($event){
+        echo 'событие из метода '.__METHOD__.'<br>';
+        echo $event->data.'<br>';
+    }
+
+function evt(){
+    echo 'событие из функции '.__FUNCTION__.'<br>';
+}
+
+-- Поведения------------------------------------------
+$this->attachBehavior('test', new \backend\components\Test());
+        //$this->attachBehavior('test', \backend\components\Test::className());
+        //$this->attachBehaviors([
+        //    'test' => new \backend\components\Test(),  // именованное поведение
+        //    \backend\components\Test::className(),          // анонимное поведение
+        //]);
+        //$this->detachBehavior('test');
+        //$this->detachBehaviors();
+        //var_dump($this->getMyProp());
+        //VarDumper::dump($this->getMyProp2(),3,true);
+        VarDumper::dump($this->getBehaviors(),3,true);
+
+<?php
+
+namespace backend\components;
+
+use yii\base\Behavior;
+
+class Test extends Behavior
+{
+    public $prop1;
+
+
+    public function getMyProp()
+    {
+        return __METHOD__;
+    }
+
+    public function getMyProp2()
+    {
+        return 'метод другой';
+    }
+
+
+}
+      в конфигурации
+        //'test' => \backend\components\Test::className(),
+                    //\backend\components\Test::className(),
+----------------------------------------
+Component
+
+behaviors() поведения
+getBehavior($name)
+getBehaviors()
+attachBehavior($name, $behavior)
+attachBehaviors($behaviors)
+detachBehavior($name)
+detachBehaviors()
+ensureBehaviors()
+
+hasEventHandlers($name)
+on($name, $handler, $data = null, $append = true)
+off($name, $handler = null)
+trigger($name, Event $event = null)
+----
+ServiceLocator
+
+components[]
+---
+Module
+
+$basePath путь для модуля
+$controllerPath
+$layoutPath
+$modules[]
+$uniqueId
+$viewPath
+params[] параметры фаил params.php
+$id
+$module;
+$layout;
+$controllerMap = []; карта контроллеров
+$controllerNamespace;
+$defaultRoute = 'default';
+getInstance() текущий класс модуля
+
+beforeAction($action)
+afterAction($action, $result)
+---------- перед и после экшена -----
+public function beforeAction($action)
+    {
+        if($this->action->id == 'pure'){echo 'hello';}
+        return parent::beforeAction($action); // TODO: Change the autogenerated stub
+    }
+    public function afterAction($action, $result)
+    {
+        if($this->action->id == 'pure'){echo 'after';}
+        return parent::afterAction($action, $result); // TODO: Change the autogenerated stub
+    }
+
+---
+Application base
+
+$basePath
+$runtimePath
+$vendorPath
+
+$assetManager
+$authManager
+$cache
+$db
+$errorHandler
+$formatter
+$i18n
+$log
+$mailer
+$request
+$response
+$security
+$urlManager
+$view
+
+$timeZone
+$uniqueId
+$controllerNamespace
+$name
+$version
+$charset = 'UTF-8';
+$language = 'en-US';
+$sourceLanguage = 'en-US';
+$controller; активный контроллер
+$layout = 'main';
+$requestedRoute;
+$requestedAction;
+$requestedParams;
+$extensions;
+$bootstrap = [];
+$loadedModules = [];
+
+'beforeRequest'
+'afterRequest';
+
+Application web
+
+$homeUrl
+
+$session
+$user
+
+$defaultRoute = 'site';
+$catchAll;
+$controller;
+------------------------------------------------
+
+Controller base
+
+$id
+$module модуль либо app
+$defaultAction = 'index';
+$modules[] все модули контроллера
+$route
+$uniqueId
+$view View
+$viewPath
+$layout - null тогда берется из модуля то есть из приложения
+$action Action
+
+actions() []
+beforeAction($action)
+afterAction($action, $result)
+// пример выше в приложении
+
+render($view, $params = []) вид к шаблону
+renderContent($content) статическая строка
+renderPartial($view, $params = []) вид без шаблона
+renderFile($file, $params = []) просто фаил ничего не применяя к нему
+
+Controller web
+
+$enableCsrfValidation = true;
+$actionParams = [];
+
+renderAjax($view, $params = []) вид без шаблона со всеми зарегестрированными скриптами
+
+redirect($url, $statusCode = 302)
+goHome()
+goBack($defaultUrl = null)
+refresh($anchor = '')
+---------------------------------------------
+View base
+
+$viewFile
+
+beginPage() EVENT_BEGIN_PAGE   до <!DOCTYPE html>
+head()
+beginBody() EVENT_BEGIN_BODY после <body>
+endBody() EVENT_END_BODY до script до </body>
+endPage() EVENT_END_PAGE после </html>
+
+beforeRender
+afterRender
+beforeRender($viewFile, $params) перед рендером файла
+afterRender($viewFile, $params, &$output)
+
+$context контроллер
+$params = []
+$renderers;  для использования шаблонизаторов
+$defaultExtension = 'php';
+$theme; тема
+$blocks;
+-----
+<?php $this->beginBlock('block1'); ?>
+
+    ...содержимое блока 1...
+
+<?php $this->endBlock();
+echo $this->blocks['block1'];?>
+
+$dynamicPlaceholders = [];
+$_viewFiles = [];
+
+render($view, $params = [], $context = null)
+renderFile($viewFile, $params = [], $context = null)
+renderPhpFile($_file_, $_params_ = [])
+renderDynamic($statements) для кеширования
+
+beginBlock($id, $renderInPlace = false)
+endBlock()
+beginContent($viewFile, $params = [])
+endContent()
+beginCache($id, $properties = [])
+endCache()
+---
+View web
+
+AssetManager $assetManager
+
+POS_HEAD 1 в конце head
+POS_BEGIN 2  после <body>
+POS_END 3 перед </body>
+POS_READY 4
+POS_LOAD 5
+
+assetBundles = [] подключенные ресурсы
+$title;
+Регистрируем ресурсы на странице
+$metaTags; registerMetaTag($options, $key = null)  $this->registerMetaTag(['name' => 'keywords', 'content' => 'yii, framework, php']);
+$linkTags; registerLinkTag($options, $key = null)
+------
+$this->registerLinkTag([
+    'title' => 'Сводка новостей по Yii',
+    'rel' => 'alternate',
+    'type' => 'application/rss+xml',
+    'href' => 'http://www.yiiframework.com/rss.xml/',
+]);
+$css; registerCss($css, $options = [], $key = null)
+$cssFiles; registerCssFile($url, $options = [], $key = null)
+$js; registerJs($js, $position = self::POS_READY, $key = null)
+$jsFiles; registerJsFile($url, $options = [], $key = null)
+clear() очистка всех тегов
+renderAjax($view, $params = [], $context = null)
+
+-------------------------------
+
+AssetBungle комплект ресурсов
+$sourcePath; задаёт корневую директорию содержащую файлы ресурса в этом комплекте. Это свойство должно быть установлено если корневая директория не доступна из Web.
+$basePath; задаёт Web доступную директорию, которая содержит файлы ресурсов текущего комплекта.
+$baseUrl задаёт URL соответствующий директории [[yii\web\AssetBundle::basePath|basePath]].
+$js = [] например http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
+$css = [];
+$depends = [];массив, перечисляющий имена комплектов ресурсов, от которых зависит данный комплект.
+jsOptions: задаёт параметры, которые будут относится к методу [[yii\web\View::registerJsFile()]], когда он вызывается для регистрации каждого JavaScript файла данного комплекта.
+---------
+$jsOptions = ['position' => \yii\web\View::POS_HEAD];
+cssOptions: задаёт параметры, которые будут приняты методом [[yii\web\View::registerCssFile()]], когда он вызывается для регистрации каждого CSS файла данного комплекта.
+------
+$cssOptions = ['condition' => 'lte IE9'];
+$cssOptions = ['noscript' => true];
+$publishOptions = [];
+
+public static function register($view) регистрация ресурсов в представлении
+    {
+        return $view->registerAssetBundle(get_called_class());
+    }
+---------------------------------
+AssetManager
+
+assetMap это имена ресурсов, которые Вы хотите исправить, а значения - это требуемые пути для ресурсов.
+$linkAssets = false; Создание символических ссылок на ресурсы к URL каждого опубликованного ресурса будет добавляться временная метка его последней модификации. если поддерживает ос
+$bundles = []
+$basePath = '@webroot/assets';
+$baseUrl = '@web/assets';
+
+------------------------------------
+Model base
+$activeValidators [] активные валидаторы
+$attributes[] атрибуты
+ ---
+ [
+     'username' => null
+     'password' => null
+     'rememberMe' => true
+ ]
+$errors[] активные ошибки
+---
+[
+    'password' => [
+        0 => 'Incorrect username or password.'
+    ]
+$firstErrors первая ошибка
+ArrayIterator $iterator
+---- доступ к атрибутам как к элементам массива
+$model = new \app\models\ContactForm;
+
+// доступ к атрибутам как к элементам массива
+$model['name'] = 'example';
+echo $model['name'];
+
+// перебор атрибутов
+foreach ($model as $name => $value) {
+    echo "$name: $value\n";
+}
+$scenario  SCENARIO_DEFAULT = 'default';
+---
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_LOGIN] = ['username', 'password'];
+        $scenarios[self::SCENARIO_REGISTER] = ['username', 'email', 'password'];
+        return $scenarios;
+    }
+$validators []
+
+attributeLabels()[] метка для атрибута
+---
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Your name',
+            'email' => 'Your email address',
+            'subject' => 'Subject',
+            'body' => 'Content',
+        ];
+    }
+rules() []
+formName() имя формы
+attributes()
+validate($attributeNames = null, $clearErrors = true)
+beforeValidate()
+afterValidate()
+hasErrors($attribute = null)
+clearErrors($attribute = null)
+load($data, $formName = null)
+
+----------------------------
+db
+\yii\db\Connection соединение с бд
+
+$driverName
+$isActive
+$lastInsertID
+$masterPdo PDO
+$queryBuilder QueryBuilder
+$schema Schema информация о текущем соединениии
+$slave Connection
+$slavePdo PDO
+$transaction Transaction
+
+ const EVENT_AFTER_OPEN = 'afterOpen';
+ const EVENT_BEGIN_TRANSACTION = 'beginTransaction';
+ const EVENT_COMMIT_TRANSACTION = 'commitTransaction';
+ const EVENT_ROLLBACK_TRANSACTION = 'rollbackTransaction';
+
+$dsn;
+$username;
+$password;
+$attributes;
+$pdo;
+$enableSchemaCache = false;
+$schemaCacheDuration = 3600;
+$schemaCacheExclude = [];
+$schemaCache = 'cache';
+$enableQueryCache = true;
+$queryCacheDuration = 3600;
+$queryCache = 'cache';
+$charset;
+$emulatePrepare;
+$tablePrefix = '';
+$schemaMap = [
+        'pgsql' => 'yii\db\pgsql\Schema', // PostgreSQL
+        'mysqli' => 'yii\db\mysql\Schema', // MySQL
+        'mysql' => 'yii\db\mysql\Schema', // MySQL
+        'sqlite' => 'yii\db\sqlite\Schema', // sqlite 3
+        'sqlite2' => 'yii\db\sqlite\Schema', // sqlite 2
+        'sqlsrv' => 'yii\db\mssql\Schema', // newer MSSQL driver on MS Windows hosts
+        'oci' => 'yii\db\oci\Schema', // Oracle driver
+        'mssql' => 'yii\db\mssql\Schema', // older MSSQL driver on MS Windows hosts
+        'dblib' => 'yii\db\mssql\Schema', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
+        'cubrid' => 'yii\db\cubrid\Schema', // CUBRID
+    ];
+$pdoClass;
+$enableSavepoint = true;
+$serverStatusCache = 'cache';
+$serverRetryInterval = 600;
+$enableSlaves = true;
+$slaves = [];
+$slaveConfig = [];
+$masters = [];
+$masterConfig = [];
+
+open()
+close()
+--------------
+Построитель запросов
+
+$rows = (new \yii\db\Query())
+    ->select(['id', 'email'])
+    ->from('user')
+    ->where(['last_name' => 'Smith'])
+    ->limit(10)
+    ->all();
+
+$q = new Query();
+        $sub = $q->select('COUNT(*)')->from('migration');
+        $sub2 = $q->select('apply_time')->from('migration')->where('apply_time=1450033473');
+        $a = '1450033473';
+        $rows =    $q
+                    ->select(['version','apply_time'])
+                    ->select('version, apply_time')
+                    ->select(['migration.version AS v', 'apply_time']) //SELECT `migration`.`version` AS `v`, `apply_time` FROM `migration`
+                    ->select('migration.version AS v ,apply_time') //SELECT `migration`.`version` AS `v`, `apply_time` FROM `migration`
+                    ->select(['ver' => 'migration.version', 'apply_time']) //SELECT `migration`.`version` AS `ver`, `apply_time` FROM `migration`
+                    //->select([]) //	SELECT * FROM `migration`
+                    ->select(["CONCAT(version, ' ', apply_time) AS full"]) //SELECT CONCAT(version, ' ', apply_time) AS full FROM `migration`
+                    ->select(['version'])
+                    ->addSelect(['apply_time']) //	SELECT DISTINCT `version`, `apply_time` FROM `migration`
+                    //->distinct() //SELECT DISTINCT CONCAT(version, ' ', apply_time) AS full FROM `migration`
+                    ->from('migration')
+                    ->from(['yii2_template.migration y'])
+                    ->from(['y'=>'yii2_template.migration'])//SELECT DISTINCT `version`, `apply_time` FROM `yii2_template`.`migration` `y`
+
+                    ->where('apply_time=1450033473') //SELECT DISTINCT `version`, `apply_time` FROM `yii2_template`.`migration` `y` WHERE apply_time=1450033473
+                    ->where('apply_time=:a', [':a' => $a])//	SELECT DISTINCT `version`, `apply_time` FROM `yii2_template`.`migration` `y` WHERE apply_time='1450033473'
+                    ->where('apply_time=:a')
+                    ->addParams([':a' => $a])
+                    /*->where([
+                        'apply_time' => ['1450033473','1450033530'],
+                        //'type' => null,
+                        //'id' => [4, 8, 15],
+                    ])
+                    */
+                    ->where(['and', 'apply_time=1450033473'] ) //SELECT `version`, `apply_time` FROM `yii2_template`.`migration` `y` WHERE (apply_time=1450033473)
+                    // ['and', 'type=1', ['or', 'id=1', 'id=2']]
+                    // ['between', 'id', 1, 10]
+                    // not between
+                    ->where(['in', 'apply_time', []])
+                    // not in
+                    //
+                    ->where([])
+                    ->orderBy([
+                        'apply_time'=>SORT_DESC //SELECT `version`, `apply_time` FROM `yii2_template`.`migration` `y` ORDER BY `apply_time` DESC
+                    ])
+                    ->orderBy('apply_time ASC') //SELECT `version`, `apply_time` FROM `yii2_template`.`migration` `y` ORDER BY `apply_time`
+                    ->addOrderBy('apply_time ASC')
+                    ->groupBy('version','apply_time') //SELECT `version`, `apply_time` FROM `yii2_template`.`migration` `y` GROUP BY `version` ORDER BY `apply_time`
+                    //->having(['apply_time'=>1450033473])
+                    //->andHaving(['>', 'age', 30]);
+                    ->limit(2)
+                    //->offset(1) //SELECT `version`, `apply_time` FROM `yii2_template`.`migration` `y` GROUP BY `version` ORDER BY `apply_time` LIMIT 1 OFFSET 1
+                    //->join()
+                    //->innerJoin()
+                    //->leftJoin()
+                    //->rightJoin()
+                    //->union()
+                    ->indexBy('version'); // сортировать по версии
+                    //->all(); // в виде массива все что есть
+                     //->column(); // первый столбец результата 0 => 'm130524_201442_init'
+                    //->one(); //первая строка запроса 'version' => 'm130524_201442_init' , 'apply_time' => '1450033530' для повышения производительности (new \yii\db\Query())->from('user')->limit(1)->one().
+                    //->scalar(); // скалярное значение первого столбца первой строки результата 'm130524_201442_init'
+                    //->exists(); //  просто возвращает что есть результат в запросе или нет
+                      //->count(); //колличесво результата '1'
+        foreach ($rows->batch(1) as $u) { // пакетная выборка по 100 записей
+            // $u это массив из 100 или менее строк из таблицы пользователей
+            var_dump($u);
+        }
+        foreach ($rows->each() as $u) { // пакетная выборка по 100 записей  по одной
+            // $u это массив из 100 или менее строк из таблицы пользователей
+            var_dump($u);
+        }
+---------------------------
+AR
+
+$dirtyAttributes
+$isNewRecord
+$oldAttributes
+$oldPrimaryKey
+$primaryKey
+$relatedRecords
+
+'afterFind'
+'beforeInsert'
+'afterInsert'
+'beforeUpdate'
+'afterUpdate'
+'beforeDelete'
+'afterDelete'
+
+tableName() название таблицы в базе данных
+
+процесс получения данных
+
+
+    Создать новый объект запроса вызовом метода [[yii\db\ActiveRecord::find()]];
+    Настроить объект запроса вызовом методов построения запросов;
+    Вызвать один из методов получения данных для извлечения данных в виде объектов Active Record.
+
+
+       /*
+         * SELECT список_полей
+            FROM список_таблиц
+            WHERE условия_запроса
+            GROUP BY условия_группировки
+            HAVING вторичные_условия_запроса
+            ORDER BY условия_сортировки
+            LIMIT диапазон_строк
+         */
+        $u = UsersTest::find() //ActiveQuery
+                ->select(['id','name','d_id'])
+                //->where('id = 1') //SELECT `id`, `name` FROM `users_test` WHERE id = 1
+                //->all(); //SELECT `id`, `name` FROM `users_test`
+                //->one(); // только первую строчку результата
+                ->orderBy('d_id') //SELECT `id`, `name`, `d_id` FROM `users_test` ORDER BY `d_id`
+                //->indexBy('d_id')
+                ->all();
+                //->count(); // колличество возвращаемых строк
+                // здесь все тоже самое что и в постоителе запросов
+        $short1 = UsersTest::findOne(2);//SELECT * FROM `users_test` WHERE `id`=2 попервичному ключу
+        $short2 = UsersTest::findAll([1,4]); //SELECT * FROM `users_test` WHERE `id` IN (1, 4)
+        $short3 = UsersTest::findOne(['id'=>1,'name'=>'Vasya']); //SELECT * FROM `users_test` WHERE (`id`=1) AND (`name`='Vasya')
+        $sql = UsersTest::findBySql('Select * from users_test')->all(); //	Select * from users_test
+
+        // получение данных
+        $i = $short1->id;
+        $n = $short1->name;
+        //$i.' - '.$n //'2 - Petya'
+        $ar = UsersTest::find()->asArray()->all(); // получили все в виде массива
+        // пакетное получение данных
+        // получить 3 покупателей одновременно
+        foreach (UsersTest::find()->batch(3) as $customers) {
+            // $customers - это массив, в котором находится 3 или меньше объектов класса
+            var_dump($customers);
+        }
+
+            // получить одновременно десять покупателей и перебрать их одного за другим
+        foreach (UsersTest::find()->each(10) as $customers) {
+            // $customer - это объект класса Customer
+            var_dump($customers);
+        }
+
+            // пакетная выборка с жадной загрузкой
+        //foreach (UsersTest::find()->with('name')->each() as $customers) {
+            // $customer - это объекта класса Customer
+            //var_dump($customers);
+        //}
+        //Вставка
+
+        // вставить новую строку данных
+        /*$customer = new UsersTest();
+        echo 'new string ';var_dump($customer->isNewRecord);//true
+        $customer->name = 'Petr';
+        $customer->d_id = 1;
+        $customer->save();
+
+        // обновить имеющуюся строку данных
+        $c = UsersTest::findOne(8);
+        echo 'update string '. var_dump($c->isNewRecord);
+        $c->name = "Petr 1";
+        $c->save();
+        */
+
+        //Массовое присвоение
+        /*$values = [
+            'name' => 'Jack',
+            'd_id' => '2',
+        ];
+
+        $customer = new UsersTest();
+
+        $customer->attributes = $values;
+        $customer->save();
+        */
+        // при указании
+        /*
+         * public function rules()
+            {
+                return [
+                    [['name', 'd_id'], 'safe'],
+                ];
+            }
+         */
+
+        //$customer = new UsersTest();
+        //$atr = $customer->loadDefaultValues();
+        $customer = UsersTest::findOne(12);
+        $customer->delete();
+
+Цикл получения нового обьекта
+new ActiveRecord
+EVENT_INIT
+
+Цикл получения данных
+ActiveRecord::find()
+EVENT_INIT
+EVENT_AFTER_FIND
+
+Цикл сохранения данных
+ActiveRecord::save()
+EVENT_BEFORE_VALIDATE
+EVENT_AFTER_VALIDATE
+EVENT_BEFORE_INSERT EVENT_BEFORE_UPDATE
+
+updateAll($attributes, $condition = '', $params = [])
+deleteAll($condition = '', $params = [])
+find()
+primaryKey()
+insert($runValidation = true, $attributes = null)
+update($runValidation = true, $attributeNames = null)
+delete()
+
+один к многим
+Users
+/**
+     * многие к одному (к одному)
+     * UsersTest::findOne(2); SELECT * FROM `users_test` WHERE `id`=2 текущий полььзователь
+     * ->dep SELECT * FROM `dep_test` WHERE `id`=2 департамент обьект
+     * поле в классе связи--текущий класс 'id' => 'd_id'
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDep()
+    {
+
+        return $this->hasOne(DepTest::className(), ['id' => 'd_id']);
+    }
+Dep
+    /**
+         * один ко многим отношение (ко многим)
+         * DepTest::findOne(1) SELECT * FROM `dep_test` WHERE `id`=1 первый отдел здесь мы получаем только отдел
+         * ->us связанные данные SELECT * FROM `users_test` WHERE `d_id`=1 а здесь уже набор данных Массив обьектов
+         * поле в классе связи--текущий класс 'd_id' => 'id'
+         * @return \yii\db\ActiveQuery
+         */
+        public function getUs()
+        {
+            return $this->hasMany(UsersTest::className(), ['d_id' => 'id']);
+        }
+-----
+ко многим
+public function hasMany($class, $link) класс связи UsersTest::className() ссылка класс связи-текущий класс 'd_id' => 'id'
+    {
+        /* @var $class ActiveRecordInterface */
+        /* @var $query ActiveQuery */
+        $query = $class::find();  ActiveQuery
+        $query->primaryModel = $this; текущая модель
+        $query->link = $link;  ссылка
+        $query->multiple = true;
+        return $query;
+    }
+    промежуточная таблица
+public function viaTable($tableName, $link, callable $callable = null)
+    {
+        $relation = new ActiveQuery(get_class($this->primaryModel), [
+            'from' => [$tableName],
+            'link' => $link,
+            'multiple' => true,
+            'asArray' => true,
+        ]);
+        $this->via = $relation;
+        if ($callable !== null) {
+            call_user_func($callable, $relation);
+        }
+
+        return $this;
+    }
+
+//$r = UsersTest::findOne(2);
+        //SELECT * FROM `users_test` WHERE `id`=1
+        //SELECT * FROM `dep_test` WHERE `id`=1
+        //$r->dep
+        //$d = DepTest::findOne(1);// номер отдела
+        $order = Order::findOne(1);
+        //VarDumper::dump($order->items,3,true);
+        //SELECT * FROM `order` WHERE `id`=1 сначала первый заказ
+        //SELECT * FROM `order_item` WHERE `order_id`=1 потом все записи где заказ равен 1
+        //SELECT * FROM `item` WHERE `id` IN ('1', '2', '3', '5') потом все товары из результата
+        $item = Item::findOne(3);
+        VarDumper::dump($item->order,3,true);
+Order
+
+/**
+     * многие ко многим
+     * сначала укажем с какой таблицей связь Item id -текущая табл  item_id - таблица связка
+     * Order id name
+     * Order_Item order_id item_id
+     * Item id name
+     * @return $this
+     */
+    public function getItems()
+    {           //связь с классом Item Item.id-текущий заказ Order_Item.item_id таблица связь
+        return $this->hasMany(Item::className(), ['id' => 'item_id']) //
+            //order_item.order_id order.id
+            ->viaTable('order_item', ['order_id' => 'id']);
+    }
+Item
+
+  public function getOrder()
+      {
+          return $this->hasMany(Order::className(), ['id' => 'order_id']) //
+
+          ->viaTable('order_item', ['item_id' => 'id']);
+      }
+Сохранение связанных данных
+
+$customer = Item::findOne(2);
+        $order = Order::findOne(3);
+
+
+        $order->link('items', $customer);
+-------------------------
+Про миграции
+
+создать миграцию
+yii migrate/create create_news_table
+создан фаил m160105_231820_test_migration.php  m<ГодМесяцДень_ЧасыМинутыСекунды>_<Имя>),
+
+При создании таблицы можно
+primaryKey($length = null) первичный ключ
+bigPrimaryKey($length = null)
+string($length = null)
+text()
+smallInteger($length = null)
+integer($length = null)
+bigInteger($length = null)
+float($precision = null)
+double($precision = null)
+decimal($precision = null, $scale = null)
+dateTime($precision = null)
+timestamp($precision = null)
+time($precision = null)
+date()
+binary($length = null)
+boolean()
+
+notNull()
+unique()
+defaultValue($default)
+
+! список примененных миграций в табл migration
+Применить миграцию
+yii migrate при этом происходит запись в таблицу migration
+yii migrate 3 применить следующие три доступные миграции
+yii migrate/to
+yii migrate/to 150101_185401                      # используя временную метку определяющую миграцию
+yii migrate/to "2015-01-01 18:54:01"              # используя строку, которая может быть получена путем использования функции strtotime()
+yii migrate/to m150101_185401_create_news_table   # используя полное имя
+yii migrate/to 1392853618                         # используя временную метку UNIX
+
+Откат
+yii migrate/down     # отменяет самую последнюю применённую миграцию
+yii migrate/down 3   # отменяет 3 последних применённых миграции
+
+Перегрузка откат - примнение
+yii migrate/redo        # перезагрузить последнюю применённую миграцию
+yii migrate/redo 3      # перезагрузить 3 последние применённые миграции
+
+История
+yii migrate/history     # показать последних 10 применённых миграций
+yii migrate/history 5   # показать последних 5 применённых миграций
+yii migrate/history all # показать все применённые миграции
+
+yii migrate/new         # показать первых 10 новых миграций
+yii migrate/new 5       # показать первых 5 новых миграций
+yii migrate/new all     # показать все новые миграции
+
+Изменение истории миграций удалит или добавит строку в таблицу
+yii migrate/mark 150101_185401                      # используя временную метку определённой миграции
+yii migrate/mark "2015-01-01 18:54:01"              # используя строку, которая может быть получена путем использования функции strtotime()
+yii migrate/mark m150101_185401_create_news_table   # используя полное имя
+yii migrate/mark 1392853618                         # используя временную метку UNIX
+
+
+Что можно сделать в классе миграции
+
+    [[yii\db\Migration::execute()|execute()]]: выполнение SQL инструкции
+    [[yii\db\Migration::insert()|insert()]]: вставка одной строки
+    [[yii\db\Migration::batchInsert()|batchInsert()]]: вставка нескольких строк
+    [[yii\db\Migration::update()|update()]]: обновление строк
+    [[yii\db\Migration::delete()|delete()]]: удаление строк
+    [[yii\db\Migration::createTable()|createTable()]]: создание таблицы
+    [[yii\db\Migration::renameTable()|renameTable()]]: переименование таблицы
+    [[yii\db\Migration::dropTable()|dropTable()]]: удаление таблицы
+    [[yii\db\Migration::truncateTable()|truncateTable()]]: удаление всех строк в таблице
+    [[yii\db\Migration::addColumn()|addColumn()]]: добавление столбца
+    [[yii\db\Migration::renameColumn()|renameColumn()]]: переименование столбца
+    [[yii\db\Migration::dropColumn()|dropColumn()]]: удаление столбца
+    [[yii\db\Migration::alterColumn()|alterColumn()]]: изменения столбца
+    [[yii\db\Migration::addPrimaryKey()|addPrimaryKey()]]: добавление первичного ключа
+    [[yii\db\Migration::dropPrimaryKey()|dropPrimaryKey()]]: удаление первичного ключа
+    [[yii\db\Migration::addForeignKey()|addForeignKey()]]: добавление внешнего ключа
+    [[yii\db\Migration::dropForeignKey()|dropForeignKey()]]: удаление внешнего ключа
+    [[yii\db\Migration::createIndex()|createIndex()]]: создание индекса
+    [[yii\db\Migration::dropIndex()|dropIndex()]]: удаление индекса
+
+
+<?php
+
+use yii\db\Schema;
+use yii\db\Migration;
+---------------------------------------------
+приминение миграций с возможностью удаления последней записи из таблице
+class m150812_094826_test_table extends Migration
+{
+    public function up()
+    {
+        /*
+        $this->createTable('new_table', [
+            'id' => $this->primaryKey(),
+            'name' => $this->string(64)->notNull(),
+            'type' => $this->integer()->notNull()->defaultValue(10),
+            'description' => $this->text(),
+            'rule_name' => $this->string(64),
+            'data' => $this->text(),
+            'created_at' => $this->datetime()->notNull(),
+            'updated_at' => $this->datetime(),
+  ]);
+    */
+        //вставка строки
+        $this->insert('test',['col2'=>'migratestr','col3'=>'newstr']);
+        //вставка кода
+        /*
+        $this->execute("INSERT INTO `test` (`id`, `col2`, `col3`) VALUES
+('', 'new string', ''),
+('', 'migratestr', 'newstr');");
+
+        */
+
+    }
+    public function down()
+    {
+        //echo "m150812_094826_test_table cannot be reverted.\n";
+        //$this->dropTable('new_table');
+        //return false;
+        //$this->delete('test'); // удалить все строки
+              \yii\helpers\VarDumper::dump($rows = (new \yii\db\Query())
+                ->select([])
+                ->from('test')
+                //->where(['last_name' => 'Smith'])
+                //->limit(2)
+                ->all(),10,true);
+            $a=end($rows);
+            $del=$a['id'];
+            $this->delete('test','id = :id',[':id'=>$del]);
+
+    }
+
+    /*
+    // Use safeUp/safeDown to run migration code within a transaction
+    public function safeUp()
+    {
+    }
+
+    public function safeDown()
+    {
+    }
+    */
+}
+
+
+Правила ведения проекта в миграциях
+1. Все изменения структуры бд хранить в миграциях
+2. Сохранять только измения схемы, а не данных
+3. Не исправлять уже примененные миграции
+
+!!! Миграции должны выполняться последовательно одна за одной
+
+----------------
+Reg Exp  основы
+В большинстве случаев большинство символов соответсвуют самому себе
+разделители
+/ /
+# #
++ +
+% %
+
+р шаблон р модификаторы
+
+Метасимволы
+    .	соответствует любому символу, кроме перевода строки (по умолчанию) одиночный символ
+    \	\. общий экранирующий символ, допускающий несколько вариантов применения
+
+    ?	.?  может быть может не быть расширяет смысл метасимвола (, является также квантификатором, означающим 0 или 1 вхождение, также преобразует жадные квантификаторы в ленивые (смотрите повторение))
+    *	.* квантификатор, означающий 0 или более вхождений
+    +	.+ -все символы квантификатор, означающий 1 или более вхождений
+
+    {} количественного квантификатора {1}{1,2}{,2}{2,}
+
+    ^	 ^fgfdgd декларирует начало данных (или строки в многострочном режиме)
+    $	dfgfdg$ декларирует конец данных или до завершения строки (или окончание строки в многострочном режиме)
+
+    [] символьный класс [0-9a-zA-Z\/ .!*()]+
+        внутри можно указать
+        \	общий экранирующий символ
+        ^	означает отрицание класса, допустим только в начале класса [^0-9a-zA-Z\/ .!*()]+
+        -	означает символьный интервал
+    () группировка
+    |	начало ветки условного выбора алтернатива
+
+\a символ оповещения, сигнал, (BEL, шестнадцатеричный код 07)
+\cx "Ctrl+x", где x - произвольный символ
+\e escape (шестнадцатеричный код 1B)
+\f разрыв страницы (шестнадцатеричный код 0C)
+\n перевод строки (шестнадцатеричный код 0A)
+\p{xx} символ со свойством xx, подробнее смотрите свойства unicode
+\P{xx} символ без свойства xx, подробнее смотрите свойства unicode
+\r возврат каретки (шестнадцатеричный код 0D)
+\t табуляция (шестнадцатеричный код 09)
+\xhh символ с шестнадцатеричным кодом hh
+\ddd символ с восьмеричным кодом ddd, либо ссылка на подмаску
+\040 еще один способ записи пробела
+\40 то же самое в случае, если данной записи предшествует менее сорока подмасок
+\7 всегда интерпретируется как ссылка на подмаску
+\11 может быть как обратной ссылкой, так и альтернативной записью символа табуляции
+\011 всегда интерпретируется как символ табуляции
+\0113 символ табуляции, за которым следует цифра "3"
+\113 интерпретируется как символ с восьмеричным кодом 113 (так как ссылок на подмаски не может быть более чем 99)
+\377 байт, всецело состоящий из единичных битов
+\81 либо обратная ссылка, либо бинарный ноль, за которым следуют цифры "8" и "1"
+
+\d любая десятичная цифра [0-9]
+\D любой символ, кроме десятичной цифры [^0-9]
+\h любой горизонтальный пробельный символ (начиная с версии PHP 5.2.4)
+\H любой символ, не являющийся горизонтальным пробельным символом (начиная с версии PHP 5.2.4)
+\s любой пробельный символ
+\S любой непробельный символ
+\v любой вертикальный пробельный символ (начиная с версии PHP 5.2.4)
+\V любой символ, не являющийся вертикальным пробельным символом (начиная с версии PHP 5.2.4)
+\w Любой символ, образующий "слово" символ подчеркивания
+\W Любой символ, не образующий "слово"
+
+
+\b граница слова
+\B не является границей слова
+\A начало данных (независимо от многострочного режима)
+\Z конец данных либо позиция перед последним переводом строки (независимо от многострочного режима)
+\z конец данных (независимо от многострочного режима)
+\G первая совпадающая позиция в строке
+
+i регистронезависимые //i
+m многострочный поиск
+S однострочный поиск
+x пропуск пробелов и комментариев не учитывай
+D $
+e
+U ленивость по умолчанию
+u вкл utf-8
+
+.	any character except newline
+\w \d \s	word, digit, whitespace
+\W \D \S	not word, digit, whitespace
+[abc]	any of a, b, or c
+[^abc]	not a, b, or c
+[a-g]	character between a & g
+^abc$	start / end of the string
+\b	word boundary
+\. \* \\	escaped special characters
+\t \n \r	tab, linefeed, carriage return
+\u00A9	unicode escaped ©
+(abc)	capture group
+\1	backreference to group #1
+(?:abc)	non-capturing group
+(?=abc)	positive lookahead
+(?!abc)	negative lookahead
+a* a+ a?	0 or more, 1 or more, 0 or 1
+a{5} a{2,}	exactly five, two or more
+a{1,3}	between one & three
+a+? a{2,}?	match as few as possible
+ab|cd	match ab or cd
+
+ip adress /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+url /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+email /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/
+color /^#?([a-f0-9]{6}|[a-f0-9]{3})$/
+pass /^[a-z0-9_-]{6,18}$/
+username /^[a-z0-9_-]{3,16}$/
+slug /^[a-z0-9-]+$/
+

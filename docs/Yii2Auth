@@ -1,0 +1,310 @@
+Идентификация - заявление о том , кем вы являетесь
+Аутентификация - это процесс проверки подлинности пользователя.Процесс входа на сайт Логин
+Авторизация -  это процесс проверки того, что пользователь имеет достаточно прав чтобы что-то сделать.
+
+User - Аутентификация
+
+    const EVENT_BEFORE_LOGIN = 'beforeLogin'; перед вызовом login()
+    const EVENT_AFTER_LOGIN = 'afterLogin';  после успешного входа
+    const EVENT_BEFORE_LOGOUT = 'beforeLogout'; перед вызовом logout()
+    const EVENT_AFTER_LOGOUT = 'afterLogout'; после выхода
+
+$identityClass; этот реализует логику аутентификации `identity` текущего пользователя. `Null`, если пользователь не аутентифицирован.
+$enableAutoLogin = false;
+$enableSession = true;
+$loginUrl = ['site/login'];
+$identityCookie = ['name' => '_identity', 'httpOnly' => true];
+$authTimeout;
+$absoluteAuthTimeout;
+$autoRenewCookie = true;
+$id ID текущего пользователя. `Null`, если пользователь не аутентифицирован.
+$identity IdentityInterface findIdentity($id);   return static::findOne($id);
+                            findIdentityByAccessToken($token, $type = null); return static::findOne(['access_token' => $token]);
+                            getAuthKey(); return $this->auth_key;
+                            getId();   return $this->id;
+                            validateAuthKey($authKey);  return $this->getAuthKey() === $authKey;
+$isGuest проверка на то, что текущий пользователь гость (не аутентифицирован)
+$returnUrl
+
+Что использовать для залогинивания
+
+// найти identity с указанным username.
+// замечание: также вы можете проверить и пароль, если это нужно
+$identity = User::findOne(['username' => $username]);
+
+// логиним пользователя
+Yii::$app->user->login($identity);
+
+login(IdentityInterface $identity, $duration = 0)
+
+Как происходит процесс
+1.запуск события beforeLogin($identity, false, $duration)) если событие прошло то
+2.$this->switchIdentity($identity, $duration); переключаем идентити класс на текущего пользователя
+    $this->setIdentity($identity); Устанавливаем в свойство класса
+    $this->enableSession убедиться что сессия включена
+    Работаем с сессией
+    Проверяяем что в identity есть обьект
+    работаем с куками
+3. присваиваем текущие id и ip пользователю
+4. записываем в лог
+5. $this->afterLogin($identity, false, $duration); событие после входа
+6. return bool аутентифицирован или нет
+
+метод logout($destroySession = true) разрушает сессию
+
+--------
+AccessControl filter
+
+             * Краткая справка
+             * allow - разрешено ли правило
+             * actions список экшенов
+             * controllers - контролллеры
+             * roles - роли
+             * ips - ip адреса
+             * verbs - метод запроса
+
+AccessRule
+    $allow true|false разрешено ли правило
+    $actions [] список экшенов
+    $controllers [] список контррллеров
+    $roles `?`:  гость * - `@`: аутентифицированный пользователь
+        Использование других имён ролей будет приводить к вызову метода [[yii\web\User::can()]], который требует включения RBAC (будет описано дальше). Если свойство пустое или не задано, то правило применяется ко всем ролям.
+    ips - ip адреса
+    verbs - метод запроса
+    matchCallback задаёт PHP колбек, который вызывается для определения, что правило должно быть применено.
+    denyCallback задаёт PHP колбек, который будет вызван, если доступ будет запрещён при вызове этого правила.
+
+
+-----------RBAC---
+1. создать данные авторизации
+2. использовать проверку доступа там где это нужно
+
+Роль(role)
+Разрешение(permissions)
+Правило(rule)
+Привязка(assignment) роли к пользователям
+Наследование
+
+1.Определение ролей и разрешений (создать,удалить,обновить,читать)
+2.Установка разрешений между ролями и правами
+3.Определение правил
+4.Связывание правил с ролями и разрешений
+5.Назначние ролей пользователям
+
+Можно хранить либо в файлах либо в бд
+yii migrate --migrationPath=@yii/rbac/migrations создать таблицы бд
+
+"auth_item" хранит авторизационные элементы
+    'name' - название элемента авторизации, string 64  not null
+    'type' - тип элемента => integer notNull
+    'description' - описание text(),
+    'rule_name' - имя правила связанного с элементом string(64),
+    'data' => -данные text(),
+    'created_at' -время создания integer(),
+    'updated_at' - время обновления integer(),
+    'PRIMARY KEY (name)', первичный индекс уникальный
+    'FOREIGN KEY (rule_name) REFERENCES ' . auth_rule.name. ON DELETE SET NULL ON UPDATE CASCADE', внешний индекс на поле rule_name на внешнее поле auth_rule.name
+     createIndex('idx-auth_item-type', auth_item, 'type'); индекс на тип
+     -- 3 индекса
+
+"auth_item_child" иерархия элементов авторизации
+    'parent' - родитель string(64)->notNull(),
+    'child' => ребенок string(64)->notNull(),
+    'PRIMARY KEY (parent, child)', первичный индекс на два поля
+    'FOREIGN KEY (parent) REFERENCES ' . auth_item . ' (name) ON DELETE CASCADE ON UPDATE CASCADE', на имя родителя
+    'FOREIGN KEY (child) REFERENCES ' . auth_item . ' (name) ON DELETE CASCADE ON UPDATE CASCADE', на имя ребенка
+
+"auth_assignment" назначние элементов авторизации
+
+    'item_name' название элемента string(64)->notNull(),
+    'user_id' => id пользователя string(64)->notNull(),
+    'created_at' - время создания назначения integer(),
+    'PRIMARY KEY (item_name, user_id)', 2 поля
+    'FOREIGN KEY (item_name) REFERENCES ' . auth_item . ' (name) ON DELETE CASCADE ON UPDATE CASCADE', внешний ключ
+
+auth_rule хранит правила для элемента авторизации
+
+    'name' => имя string(64)->notNull(),
+    'data' => text(),
+    'created_at' integer(),
+    'updated_at' integer(),
+    'PRIMARY KEY (name)',
+-------
+Yii содержит оттельные классы для всех таблиц
+Assignment
+Permission
+Role
+Rule
+
+
+createRole($name) создается обьект роль
+createPermission($name) создается обьект разрешение
+add($object) добавляет в табл item
+        public function add($object)
+            {
+                addItem($object); добавить элемент
+                    $this->db->createCommand() вставка в табл
+                                ->insert($this->itemTable, [
+                                    'name' => $item->name,
+                                    'type' => $item->type,
+                                    'description' => $item->description,
+                                    'rule_name' => $item->ruleName,
+                                    'data' => $item->data === null ? null : serialize($item->data),
+                                    'created_at' => $item->createdAt,
+                                    'updated_at' => $item->updatedAt,
+                                ])->execute();
+
+                addRule($object); добавить правило
+                    $this->db->createCommand() вставка правила
+                                ->insert($this->ruleTable, [
+                                    'name' => $rule->name,
+                                    'data' => serialize($rule),
+                                    'created_at' => $rule->createdAt,
+                                    'updated_at' => $rule->updatedAt,
+                                ])->execute();
+
+            }
+            запрос типа
+            INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`) VALUES ('testPermission', 2, 'new testPermission', NULL, 'a:1:{i:0;s:3:\"arr\";}', 1452085484, 1452085484)
+remove($object) удалить
+update($name, $object) обновить
+getRole($name) роль
+getPermission($name) разрешение
+getRoles() роли
+getPermissions() ращрешения
+
+public function addChild($parent, $child)   добавить в иерархию родитель ребенок
+    {
+
+        $this->db->createCommand()
+            ->insert($this->itemChildTable, ['parent' => $parent->name, 'child' => $child->name])
+            ->execute();
+    }
+    SELECT `name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at` FROM `auth_item`, `auth_item_child` WHERE (`parent`='testPermission') AND (`name`=`child`)
+    INSERT INTO `auth_item_child` (`parent`, `child`) VALUES ('testRole', 'testPermission')
+
+public function assign($role, $userId)
+    {
+        $assignment = new Assignment([ назначенеи элементов авторизации
+            'userId' => $userId,
+            'roleName' => $role->name,
+            'createdAt' => time(),
+        ]);
+
+        $this->db->createCommand()
+            ->insert($this->assignmentTable, [
+                'user_id' => $assignment->userId,
+                'item_name' => $assignment->roleName,
+                'created_at' => $assignment->createdAt,
+            ])->execute();
+
+        return $assignment;
+    }
+INSERT INTO `auth_assignment` (`user_id`, `item_name`, `created_at`) VALUES ('1', 'testRole', 1452087575)
+
+--------
+can
+public function can($permissionName, $params = [], $allowCaching = true)
+    {
+        if ($allowCaching && empty($params) && isset($this->_access[$permissionName])) {
+            return $this->_access[$permissionName];
+        }
+        $access = $this->getAuthManager()->checkAccess($this->getId(), $permissionName, $params);
+                public function checkAccess($userId, $permissionName, $params = [])
+                    {
+                        $assignments = $this->getAssignments($userId); ищем связь что в назначениях
+                        $this->loadFromCache();
+                        if ($this->items !== null) {
+                            return $this->checkAccessFromCache($userId, $permissionName, $params, $assignments);
+                        } else {
+                            return $this->checkAccessRecursive($userId, $permissionName, $params, $assignments);
+                        }
+                    }
+        if ($allowCaching && empty($params)) {
+            $this->_access[$permissionName] = $access;
+        }
+
+        return $access;
+    }
+
+
+        $auth = Yii::$app->authManager;
+
+        //создаем разрешение и доб
+        $createPost = $auth->createPermission('сreatePost');
+        $createPost->description = 'Create a Post';
+        $createPost->data = ['arr'];
+        //$auth->add($createPost);
+
+        $updatePost = $auth->createPermission('updatePost');
+        $updatePost->description = 'Update a Post';
+        $updatePost->data = ['arr'];
+        //$auth->add($updatePost);
+
+        $deletePost = $auth->createPermission('deletePost');
+        $deletePost->description = 'Depete a Post';
+        $deletePost->data = ['arr'];
+        //$auth->add($deletePost);
+
+        $readPost = $auth->createPermission('readPost');
+        $readPost->description = 'Read a Post';
+        $readPost->data = ['arr'];
+        //$auth->add($readPost);
+
+        // создаем роль и доб
+        $admin = $auth->createRole('admin');
+        $admin->description = 'admin';
+        $admin->data = ['arr'];
+        //$auth->add($admin);
+
+        $author = $auth->createRole('author');
+        $author->description = 'author';
+        $author->data = ['arr'];
+        //$auth->add($author);
+
+        // добавить в дети роль , разрешение
+        //$auth->addChild($author,$createPost);
+        //$auth->addChild($author,$readPost);
+
+        //$auth->addChild($admin,$author);
+        //$auth->addChild($admin,$updatePost);
+        //$auth->addChild($admin,$deletePost);
+
+        // связать роль с пользоватлем то есть названачить
+        //$auth->assign($admin, 1);
+        //$auth->assign($author, 3);
+
+        // создадим правило
+        $rule = new \backend\components\AuthorRule();
+        //$auth->add($rule);
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        $updateOwnPost = $auth->createPermission('updateOwnPost');
+        $updateOwnPost->description = 'Update own post';
+        $updateOwnPost->ruleName = $rule->name;
+        //$auth->add($updateOwnPost);
+
+        // "updateOwnPost" будет использоваться из "updatePost"
+        //$auth->addChild($updateOwnPost, $updatePost);
+
+        // разрешаем "автору" обновлять его посты
+        //$auth->addChild($author, $updateOwnPost);
+
+        $user = \Yii::$app->user->identity->username;
+        echo 'Имя пользователя '.$user.'<br>';
+
+        $role = array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id));
+        //echo 'Роль '.$role[0].'<br>';
+        if (\Yii::$app->user->can('readPost')) {
+            echo 'readPost ok<br>';
+        }
+        if (\Yii::$app->user->can('сreatePost')) {
+            echo 'createPost ok<br>';
+        }
+        $p = ['id'=>3];
+        if (\Yii::$app->user->can('updatePost',['idp' => $p])) {
+            echo 'updatePost ok<br>';
+        }
+        if (\Yii::$app->user->can('deletePost')) {
+            echo 'deletePost ok<br>';
+        }

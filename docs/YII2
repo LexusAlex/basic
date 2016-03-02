@@ -1,0 +1,575 @@
+index.php
+require(__DIR__ . '/../basic.yii2/vendor/yiisoft/yii2/Yii.php');
+    require(__DIR__ . '/BaseYii.php');
+        YII_BEGIN_TIME
+        YII2_PATH
+        YII_DEBUG
+        YII_ENV
+        YII_ENV_PROD
+        YII_ENV_DEV
+        YII_ENV_TEST
+        YII_ENABLE_ERROR_HANDLER
+    class Yii extends \yii\BaseYii{}
+
+    spl_autoload_register(['Yii', 'autoload'], true, true);
+
+    Yii::$classMap = require(__DIR__ . '/classes.php');
+        return array()
+    Yii::$container = new yii\di\Container();
+        BaseYii
+            if(isset(static::$classMap[yii/di/Container])) {
+                            ::app null
+                            ::classMap = [классы]
+                            ::aliases = @yii
+                            ::container = null
+                            ::logger = null
+                $classFile = static::$classMap[yii/di/Container];//Applications/MAMP/htdocs/basic.yii2/vendor/yiisoft/yii2/di/Container.php
+            }
+            include(Applications/MAMP/htdocs/basic.yii2/vendor/yiisoft/yii2/di/Container.php);
+            class Container extends Component{}
+                yii\base\Component
+                    class Component extends Object{}
+                        yii\base\Object
+                            class Object implements Configurable
+                                yii\base\Configurable
+                                    interface Configurable{}
+        base/Object
+            public function __construct($config = [])
+                $config = []
+                $this - yii/di/Container
+                    $this->init();
+                        public function init(){}
+index.php
+$config = require(__DIR__ . '/../basic.yii2/config/web.php');
+(new yii\web\Application($config))->run();
+    include(yii\web\Application)
+        ::app null
+        ::classMap = [классы]
+        ::aliases = @yii
+        ::container = yii/di/Container
+        ::logger = null
+
+    class Application extends \yii\base\Application
+        yii\base\Application
+            abstract class Application extends Module
+                yii\base\Module
+                    class Module extends ServiceLocator
+                        yii\di\ServiceLocator
+                            class ServiceLocator extends Component
+                                Component уже подключен
+    $this yii\web\Application
+    $config = [conf....]
+    public function __construct($config = []){
+         Yii::$app = yii\web\Application;
+            base/Module->setInstance(yii\web\Application);
+                Yii::$app->loadedModules[get_class(yii\web\Application)] = yii\web\Application;
+                    Первый модуль - это приложение
+                        (
+                        	yii\web\Application	=>	(
+                        	)
+                        )
+            yii\web\Application->state = null
+            yii\web\Application->state = 0
+
+             yii\web\Application->preInit([conf]);
+                $component = unitaaliz
+                $id = unitaaliz
+                    yii\web\Application->setBasePath(/Applications/MAMP/htdocs/basic.yii2)
+                        yii/base/Module::setBasePath(/Applications/MAMP/htdocs/basic.yii2);
+                            /Applications/MAMP/htdocs/basic.yii2 = Yii::getAlias(/Applications/MAMP/htdocs/basic.yii2);
+                                        ::app yii/web/Application
+                                        ::classMap = [классы]
+                                        ::aliases = @yii
+                                        ::container = yii/di/Container
+                                        ::logger = null
+                            public static function getAlias($alias, $throwException = true)
+                                       return /Applications/MAMP/htdocs/basic.yii2
+                            $p = realpath(/Applications/MAMP/htdocs/basic.yii2); -абсолютный путь к файлу
+                            yii\web\Application->_basePath = /Applications/MAMP/htdocs/basic.yii2;
+                    Yii::setAlias('@app', /Applications/MAMP/htdocs/basic.yii2); второй алиас для прилложения
+                        if (strncmp('@app'', '@', 1)) - сравниваем первый символ
+                    unset($config['basePath']);
+
+                            Yii::setAlias('@vendor', $this->_vendorPath);
+                            Yii::setAlias('@bower', $this->_vendorPath . DIRECTORY_SEPARATOR . 'bower');
+                            Yii::setAlias('@npm', $this->_vendorPath . DIRECTORY_SEPARATOR . 'npm');
+                            Yii::setAlias('@runtime', $this->_runtimePath);
+                    $config['timeZone']
+                foreach (yii\web\Application->coreComponents() as log => 'yii\log\Dispatcher') {}
+                                CoreComponents
+
+                                'log' => ['class' => 'yii\log\Dispatcher'],
+                                'view' => ['class' => 'yii\web\View'],
+                                'formatter' => ['class' => 'yii\i18n\Formatter'],
+                                'i18n' => ['class' => 'yii\i18n\I18N'],
+                                'mailer' => ['class' => 'yii\swiftmailer\Mailer'],
+                                'urlManager' => ['class' => 'yii\web\UrlManager'],
+                                'assetManager' => ['class' => 'yii\web\AssetManager'],
+                                'security' => ['class' => 'yii\base\Security'],
+                                'request' => ['class' => 'yii\web\Request'],
+                                'response' => ['class' => 'yii\web\Response'],
+                                'session' => ['class' => 'yii\web\Session'],
+                                'user' => ['class' => 'yii\web\User'],
+                                'errorHandler' => ['class' => 'yii\web\ErrorHandler'],
+
+                    $config['components'][view] = 'yii\web\View';
+                    $config['components'][log]['class'] = yii\log\Dispatcher['class'];
+                    ..... Все компоненты
+        Установка обработчика ошибок
+        yii\web\Application->registerErrorHandler($config);
+            yii\web\Application->set('errorHandler', $config['components']['errorHandler']);
+                ServiceLocator
+                public function set('errorHandler', $definition	=>	(
+                                                    		errorAction	=>	site/error
+                                                    		class	=>	yii\web\ErrorHandler
+                                                    	))
+                unset(yii\web\Application->_components[errorHandler]);
+                    if (isset($definition['class'])) {
+                    Наделили конфигурицией этот массив
+
+                public function get("ErrorHandler", $throwException = true)
+                создать обьект ErrorHandler
+                BaseYii
+
+                public static function createObject($type, array $params = [])
+                (
+                	$type	=>	(
+                		errorAction	=>	site/error
+                		class	=>	yii\web\ErrorHandler
+                	)
+                )
+                    return static::yii/di/Container->get(yii\web\ErrorHandler, $params, []);
+                        di/Container
+                        return di/Container->build(ErrorHandler, $params, []);
+                            include(ErrorHandler)
+                                class ErrorHandler extends \yii\base\ErrorHandler
+                                    abstract class ErrorHandler extends Component
+                                        if (!empty($config)) {
+                                                    Yii::configure(YiiwebErrorHandler, $config);
+                                                    new Obj
+
+                                                }
+            $this->getErrorHandler()->register();
+                ---Обработка ошибок в yii
+                ini_set('display_errors', false);
+                set_exception_handler([ErrorHandler, 'handleException']); функция обработки исключений
+                set_error_handler([$this, 'handleError']); ошибки
+                register_shutdown_function([$this, 'handleFatalError']); фатальные ошибки
+
+        Component::__construct($config);
+            Yii::configure($this, $config); Конфигурирование всего
+                public function __set('components', $value)
+                    setComponents($components)
+                        $components	=>	(
+                        		request	=>	(
+                        		)
+                        		cache	=>	(
+                        		)
+                        		user	=>	(
+                        		)
+                        		mailer	=>	(
+                        		)
+                        		log	=>	(
+                        		)
+                        		db	=>	(
+                        		)
+                        		view	=>	(
+                        		)
+                        		formatter	=>	(
+                        		)
+                        		i18n	=>	(
+                        		)
+                        		urlManager	=>	(
+                        		)
+                        		assetManager	=>	(
+                        		)
+                        		security	=>	(
+                        		)
+                        		response	=>	(
+                        		)
+                        		session	=>	(
+                        		)
+                    Создание конфигурации для каждого компонента
+                    setModules($modules)
+    }
+    yii/web/Application init()
+        {
+            yii/web/Application->state = 1;
+            yii/web/Application->bootstrap();
+                $request = $this->getRequest(); текущий запрос
+                    Создание обьекта request c заданной конфигурацией
+             Yii::setAlias('@webroot', dirname($request->getScriptFile()));
+             Yii::setAlias('@web', $request->getBaseUrl());
+                yii/base/Application
+                    Установка вендоров
+
+                    class Dispatcher extends Component
+                         public function __construct($config = [])
+                            public function init() Logger
+
+
+        }
+    -------- запуск
+yii/web/Application -> run
+    yii/web/Application->state = 2;
+        yii/base/Component->trigger(before_request);
+            yii/base/Component->ensureBehaviors();
+            if (!empty(yii/base/Component->_events[before_request]))
+                if (Event === null)
+                    $event = new Event;
+                        (
+                        	$event	=>	(
+                        		_events	=>	(
+                        		)
+                        		name	=>
+                        		sender	=>
+                        		handled	=>	0
+                        		data	=>
+                        	)
+                        )
+                        // debug module
+    yii/web/Application->state = 3
+    $response = yii/web/Application->handleRequest(yii/web/Application->getRequest());
+        public function handleRequest(Request)
+            yii/web/Request->resolve()
+                $result = Yii::$app->getUrlManager()->parseRequest(Request);
+                    if ($this->enablePrettyUrl){}
+                        trace Pretty URL not enabled. Using default URL parsing logic.
+                            $route = $request->getQueryParam(Request->routeParam, '');
+                                 if (is_array(site/index))
+                 (
+                 	$result	=>	(
+                 		0	=>	site/index
+                 		1	=>
+                 	)
+                 )
+                 $route = site/index
+
+                 return [$route, $_GET];
+        (
+            $params	=>	(
+                r	=>	site/index
+            )
+        )
+        Route requested: 'site/index' log
+        yii/web/Application->requestedRoute = 'site/index';
+        поиск экшена определеление контроллера
+        $result = yii/web/Application->runAction(site/index, (r	=>	site/index));
+            base/Module ->runAction($route, $params = [])
+                $parts = yii/web/Application->createController(site/index);
+                    if ($route === '') -> defaultRoute;
+                    $route = trim($route, '/'); ->
+                    strpos(site/index, '/') !== false)
+                        разбор или разделение на путь на маршрут и на id контроллера
+                        list ($id, $route) = explode('/', $route, 2);
+
+                        id = site
+                        route = index
+
+                       base/Module->controllerMap[site] // поищем в карте контроллеров
+
+                        $module = base/Module->getModule(site);
+                            if (($pos = strpos($id, '/')) !== false) на суб модуль
+                            if (isset($this->_modules[$id])) Проверим на модуль
+                            return null так как нигде не нашли
+                if ($module !== null) если нужно создать контроллер из модуля
+                $controller = yii/web/Application->createControllerByID(site);
+                    $prefix = '';
+                    $className = site;
+                    if (!preg_match('%^[a-z][a-z0-9\\-_]*$%', site)) { //
+                                     return null;
+                    }
+                    !preg_match('%^[a-z0-9_/]+$%i', $prefix)
+                    $className = str_replace(' ', '', ucwords(str_replace('-', ' ', $className))) . 'Controller';// создаем имя
+                    $className = SiteController
+                    $className = app\controllers\SiteController для полного счастья
+                    class_exists($className) проверим что класс есть и подключаем
+                        все субклаасы от контроллера
+                        $controller = Yii::createObject(app\controllers\SiteController, [site, $this]);
+                        создали контролер
+                        base/Controller  __construct(site, yii/webApplication, $config = [])
+                            $this app/SiteController
+                            $id = site
+                            module = yii/webApplication
+                            parent::__construct([]);
+                controller
+                $parts[SiteController,index]
+        $controller = SiteController
+        $actionId = index
+        oldController = null
+            $result = SiteController->runAction(index, [par]);// теперь пора запускать действие
+                $action = SiteController->createAction(index);
+                    if ($id === '') -> defaultAction
+                    $actionMap = $this->actions();
+                        'error' => [
+                                        'class' => 'yii\web\ErrorAction',
+                                    ],
+                    $methodName = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $id))));
+                    метод actionIndex
+                    Различные проверки
+                        return new InlineAction(index, SiteController, actionIndex);
+                            создали обьект и подключили
+                            public function __construct($id, $controller, $actionMethod, $config = [])
+                action = base/InlineAction
+                        Route to run: site/index
+                Yii::$app->requestedAction = base/InlineAction                
+            beforeAction($action)
+            new ActionEvent($action);
+            $this->trigger(self::EVENT_BEFORE_ACTION, $event);
+
+            base/InlineAction ->runWithParams($params) параметры
+                $args = action->controller->bindActionParams(Action, $_GET);
+            Running action: app\controllers\SiteController::actionIndex()
+runWithParams($params) метод в котором происходит запкск экшена
+---- Непосредственный запуск экшена
+return call_user_func_array([SiteController, InlineAction], $args);
+-----
+return SiteController->render('index');
+    $content = Controller->getView()->render(index, $params, SiteController);
+        View $viewFile = View->findViewFile(index, SiteController);
+            $viewFile = $path = /Applications/MAMP/htdocs/basic.yii2/views/site/index.php
+                renderFile($viewFile, $params = [], $context = null)
+                $this->beforeRender($viewFile, $params))
+                Rendering view file: /Applications/MAMP/htdocs/basic.yii2/views/site/index.php
+                public function renderPhpFile(/Applications/MAMP/htdocs/basic.yii2/views/site/index.php, $_params_ = [])
+                    ob_start(); Включение буферизации вывода
+                     ob_implicit_flush(false);
+                     extract($_params_, EXTR_OVERWRITE); импортируем переменные
+                      require(/Applications/MAMP/htdocs/basic.yii2/views/site/index.php); подклчаем фаил
+                        return ob_get_clean(); Получить содержимое текущего буфера и удалить его
+                $output = вывод файла /Applications/MAMP/htdocs/basic.yii2/views/site/index.php в виде строки
+                View->afterRender($viewFile, $params, $output); если нужно что то добавить в вид после рендинга
+    $content = вывод файла site/index.php  <div>output view</div>
+    return SiteController->renderContent(index.php в виде строки);
+        $layoutFile = SiteController->findLayoutFile(View);
+            ищем layout
+            $module = web/Application
+            if (is_string($this->layout) layout строка
+            ($this->layout === null) == null
+
+           if (Application !== null && is_string(Application->layout)) {
+                           $layout = Application->layout; //а это main
+                       }
+           далее определили путь до файла
+           /Applications/MAMP/htdocs/basic.yii2/views/layouts/main.php и нашли шаблон
+    $layout = /Applications/MAMP/htdocs/basic.yii2/views/layouts/main.php
+    View->renderFile(/Applications/MAMP/htdocs/basic.yii2/views/layouts/main.php, ['content' => <div>output view</div>], SiteController);
+        (is_file($viewFile)) проверка лейаута
+        $output = '';
+        Rendering view file: /Applications/MAMP/htdocs/basic.yii2/views/layouts/main.php
+        $output = $this->renderPhpFile(layout, <div>output view</div>);
+                    ob_start();
+                    ob_implicit_flush(false);
+                    extract(<div>output view</div>, EXTR_OVERWRITE);
+                    require(/Applications/MAMP/htdocs/basic.yii2/views/layouts/main.php);
+                        подключаили смотрим что внутри
+                            AppAsset::register(View);
+                                include(AppAsset)
+                                    include(AssetBundle)
+                                        return $view->registerAssetBundle(get_called_class());//Возвращает имя класса, из которого был вызван статический метод.
+                                            registerAssetBundle(AppAsset, $position = null)
+                                                include (AssetManager)
+                                                    basePath = /Applications/MAMP/htdocs/app.yii2/assets
+                                            $am = AssetManager
+                                            $bundle = $am->getBundle($name);
+                                            $bundle->publish(AssetManager);
+                                                URL -> isRelative(site.ss)
+                                            AssetConverter public function convert(site.css,/Applications/MAMP/htdocs/app.yii2)
+                                            dependencies
+                                            yii\web\YiiAsset
+                                            $sourcePath = '@yii/assets'
+                                            $js = ['yii.js',];
+                                            dep = 'yii\web\JqueryAsset',
+                                                protected function publishDirectory(/Applications/MAMP/htdocs/basic.yii2/vendor/yiisoft/yii2/assets, $options)
+                                                    hash(/Applications/MAMP/htdocs/basic.yii2/vendor/yiisoft/yii2/assets)
+                                                        $path = (is_file($path) ? dirname($path) : $path) . filemtime($path);
+                                                            /Applications/MAMP/htdocs/basic.yii2/vendor/yiisoft/yii2/assets1438812030
+                                                    dir = cb6cfd55
+                                                    dstDor = /Applications/MAMP/htdocs/app.yii2/assets/cb6cfd55
+                                                    return [$dstDir, $this->baseUrl . '/' . $dir];
+                                            yii.js
+                                                yii\web\JqueryAsset все тоже самое что и со всеми остальными ресурсами
+                                                4c241a13
+                                        AssetBundles
+                                            AppAsset
+                                                YiiAsset
+                                                    JqueryAsset
+                            К текущему моменту у View есть
+                            AssetBudles[3]
+
+                            public function beginPage()
+                                {
+                                    ob_start();
+                                    ob_implicit_flush(false);
+
+                                    $this->trigger(self::EVENT_BEGIN_PAGE);
+                                }
+                             HTML :: csrfMetaTags() static::tag('meta', '', ['name' => 'csrf-param', 'content' => $request->csrfParam]) . "\n    "
+
+                            public function head()
+                                {
+                                    echo self::PH_HEAD;
+                                }
+
+                            public function beginBody()
+                                {
+                                    echo self::PH_BODY_BEGIN;
+                                    $this->trigger(self::EVENT_BEGIN_BODY);
+                                }
+
+                            public function endBody()
+                                {
+                                    $this->trigger(self::EVENT_END_BODY);
+                                    echo self::PH_BODY_END;
+                                    а здесь нужно подключить все файлы ресурсов
+                                    foreach (array_keys($this->assetBundles) as $bundle) {
+                                        $this->registerAssetFiles($bundle);
+                                    }
+                                }
+
+                            public function endPage($ajaxMode = false)
+                                {
+                                    $ajaxMode = false
+                                    $this->trigger(self::EVENT_END_PAGE);
+
+                                    $content = ob_get_clean(); Получить содержимое текущего буфера и удалить его
+                                    Текущий контент
+                                                <!DOCTYPE html>
+                                                <html lang="en-US">
+                                                <head>
+                                                    <meta charset="UTF-8">
+                                                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                                                    <meta name="csrf-param" content="_csrf">
+                                                    <meta name="csrf-token" content="TmI0ZjFmNmo/A38/QQNcAgkITQEJDBtefChkAVsuRlomU1IWUl59Ew==">
+                                                    <title>My Yii Application</title>
+                                                    <![CDATA[YII-BLOCK-HEAD]]></head>
+                                                <body>
+                                                <![CDATA[YII-BLOCK-BODY-BEGIN]]>
+                                                    <div class="container">
+
+                                                ntfsdfsdf    </div>
+                                                </div>
+
+
+                                                <div id="yii-debug-toolbar" data-url="/index.php?r=debug%2Fdefault%2Ftoolbar&amp;tag=56bc6b52dc908" style="display:none" class="yii-debug-toolbar-bottom"></div><![CDATA[YII-BLOCK-BODY-END]]></body>
+                                                </html>
+
+                                    --- теперь преобразуем контент
+                                    echo strtr($content, [
+                                        self::PH_HEAD => $this->renderHeadHtml(),
+                                            renderHeadHtml()
+                                                if (!empty($this->metaTags)) 
+                                                 if (!empty($this->linkTags)) 
+                                                if (!empty($this->css))
+                                                 (!empty($this->jsFiles[self::POS_HEAD]))
+                                                вернется
+                                                <link href="/css/site.css" rel="stylesheet">
+                                                <link href="/assets/b91a2b69/toolbar.css" rel="stylesheet">
+                                                что вставиться потом в <![CDATA[YII-BLOCK-HEAD]]>
+                                        self::PH_BODY_BEGIN => $this->renderBodyBeginHtml(),
+                                                renderBodyBeginHtml()
+                                                empty  <![CDATA[YII-BLOCK-BODY-BEGIN]]>
+
+                                        self::PH_BODY_END => $this->renderBodyEndHtml($ajaxMode),
+                                            renderBodyEndHtml($ajaxMode)
+                                            будет вставлено
+                                            <script src="/assets/4c241a13/jquery.js"></script>
+                                            <script src="/assets/cb6cfd55/yii.js"></script>
+                                            <script src="/assets/b91a2b69/toolbar.js"></script>
+
+                                    ]);
+                                    очистим все
+                                    public function clear()
+                                        {
+                                            $this->metaTags = null;
+                                            $this->linkTags = null;
+                                            $this->css = null;
+                                            $this->cssFiles = null;
+                                            $this->js = null;
+                                            $this->jsFiles = null;
+                                            $this->assetBundles = [];
+                                        }
+                                }
+
+
+                    return ob_get_clean();
+После запуска экшена
+$result = $this->afterAction($action, $result);\\ здесь контент
+Выше в разбор запроса
+yii/web/Application->handleRequest()
+Рассмотрим ответ пользователю
+result = Doctype....
+----сейчас на руках сырой текст
+$request = запрос
+$response = ответ
+($result instanceof Response) no
+    include(Responce)
+        Responce->version = 1.0 Устанавливаем версию протокола в зависимости от $_SERVER['SERVER_PROTOCOL']
+        Responce->charset = Utf-8
+        format = html
+                    self::FORMAT_HTML => 'yii\web\HtmlResponseFormatter',
+                    self::FORMAT_XML => 'yii\web\XmlResponseFormatter',
+                    self::FORMAT_JSON => 'yii\web\JsonResponseFormatter',
+                    self::FORMAT_JSONP 
+        Response->data = result а именно doctype...
+
+Поднялись наверх
+yii/web/Application -> run
+        $responce = ответ в html строке
+        $this->state = 4
+        $this->state = 5;AfterRequest
+
+        Теперь нужно отправить ответ
+        Response ->send
+            if ($this->isSent) false еще не отправлен
+                EVENT_BEFORE_SEND
+                    REsponce -> prepare()
+                        Нужно определить формат
+                         if ($formatter instanceof ResponseFormatterInterface)
+                            class HtmlResponseFormatter extends Component implements ResponseFormatterInterface
+                            подключам
+                            $formatter - > format(Responce)
+                                Установим Content-Type' text/html; charset=UTF-8
+                                подключим
+                                class HeaderCollection extends Object implements \IteratorAggregate, \ArrayAccess, \Countable
+                                    Установим наш заголовок
+                                    set(Content-Type, text/html; charset=UTF-8)
+                                    $response->content = $response->data;
+                                    На данный момент Responce это
+
+                                        format html
+                                        data Doctype
+                                        content Doctype
+                                        charset Utf-8
+                                        status = ok
+                                        version 1.1
+                                        statusCode = 200
+                                        headers = [content-type ....]
+                 EVENT_AFTER_PREPARE
+                 Нужно послать заголовки
+                 $this->sendHeaders();
+                    header("HTTP/{$this->version} $statusCode {$this->statusText}");
+                    header("$name: $value", $replace);
+                    Далее куки пошлем если есть
+                 Responce->sendContent()
+                    echo $this->content; Doctype
+                 EVENT_AFTER_SEND
+            isSent = true; все послано
+        $this->state = 6
+        return $response->exitStatus;
+        -----------------------
+
+
+
+Подключение модуля debug yii2-debug/Module.php
+    public function init()
+        parent::init(); base/Module определяем namespace yii\debug\controllers
+            initPanels() Панели дебагера
+                $corePanels 7 штук создали обьект для каждого
+         
+
+
+
+
+
+

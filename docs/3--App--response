@@ -1,0 +1,44 @@
+Начало 2--App--run
+index.php Входной скрипт
+    base/Application::run() Запуск приложения
+        web/Application::handleRequest() Обработка запроса
+            1. Сейчас на руках то что было возвращено из action $result
+            2. Проверка $result instanceof Response если да то просто вернем обьект Response
+            3. Получим обьект $response = $this->getResponse();
+            4. Присвоим в ответ результат $response->data = $result;
+            5. Вернем return $response;
+TODO    1.web/Application->state = 4 Контрольная точка
+TODO    2.Запуск события self::EVENT_AFTER_REQUEST После запроса
+TODO    3.web/Application->state = 5 Контрольная точка отправка ответа
+        4.web/Response->send(); Отправка ответа клиенту
+            1. Проверка что ответ не отправлен $this->isSent
+TODO        2. Запуск события self::EVENT_BEFORE_SEND
+            3. web/Response->prepare(); Подготовка ответа к отправке
+                1.Определяем формат ответа $this->format
+                2.Создать обьект форматтера $formatter = Yii::createObject($formatter); например HtmlResponseFormatter
+                3.Форматтер создан проверяем $formatter instanceof ResponseFormatterInterface
+                4.Запуск метода format HtmlResponseFormatter->format(Response);
+                    1.Сформируем заголовок contentType = text/html; charset=UTF-8
+                    2.Создать обьект заголовков getHeaders()
+                       вернуть обьект new yii\web\HeaderCollection
+                    3.Установить заголовок contentType HeaderCollection::set($name, $value = '')
+                    4.Проверим что $response->data не пустая
+                    5.Переприсвоим $response->content = $response->data
+                5.Если  $response->content массив то преобразуем его в строку
+TODO        4. Запуск события self::EVENT_AFTER_PREPARE
+            5.$this->sendHeaders(); Посылка заголовков
+                1.Перебор всех заголовков в HeaderCollection
+                2.Отправка всего что есть header("$name: $value", $replace); то есть все заголовки
+                3.$statusCode = 200
+                4.header("HTTP/{$this->version} {$statusCode} {$this->statusText}"); Статус /версия http/ текст статуса
+                5.Отправка кук $this->sendCookies();
+                6.Заголовки и куки отправлены
+            6.$this->sendContent(); Отправка контента
+                1. echo Response->content; либо читаем из потока
+TODO        7. Запуск события self::EVENT_AFTER_SEND
+            8. Ответ отправлен $this->isSent = true;
+            9. далее 4--App--end конец обработки запроса
+
+
+
+

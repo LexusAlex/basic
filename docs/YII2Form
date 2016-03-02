@@ -1,0 +1,138 @@
+Work forms yii2
+    new ContactForm
+           'text' => NULL,
+           'textArea' => NULL,
+
+           '_errors' => NULL,
+           '_validators' => NULL,
+           '_scenario' => 'default',
+           '_events' =>
+           '_behaviors' => NULL,
+    $_POST['ContactForm'] Берем то что из массива
+    Model::load($_POST['ContactForm']) загружаем а именно
+        Model->setAttributes($_POST['ContactForm'],$safeOnly = true) атрибуты
+            $this->safeAttributes() безопасные атрибуты
+                $this->scenarios(); DEFAULT
+                    Пробегаемся по валидаторам
+                        Model createValidators() создаем
+                            парсим $this->rules() создаем валидатор обьект
+            Проверили и присвоили значение
+            $this->onUnsafeAttribute($name, $value)   это небезопасные атрибуты
+                Просто запись в лог что присвоени произошло небезопасного атрибута
+    return true все присвоили
+        'text' =>  'dfdf',
+       'textArea' => null,
+
+       '_errors' => NULL,
+       '_validators' => array валидаторов,
+       '_scenario' => 'default',
+       '_events' =>
+       '_behaviors' => NULL,
+    $model->validate() Валидируем
+        if ($clearErrors($attributeNames = null, $clearErrors = true)) Очищаем ошибки если нужно
+            ---beforeValidate() событие перед валидацией
+            долгий процесс валидации атрибута
+            activeAttributes
+            ActiveValidators
+            validateAttributes($model, $attributes = null)
+            ---afterValidate() событие после валидации
+            Проверяем ошибки
+            можно вывести при желании
+
+------------------------------------
+ActiveForm::begin() создание обьекта виджета с заданной конфигурациией
+    ActiveForm:: пока обьект выглядит так
+       'action' => '',
+       'method' => 'post',
+       'options' =>
+              array (
+                'style' => '',
+                'class' => 'form',
+                'fieldConfig' =>
+                        array (
+                          'template' => '{label}{input}{error}',
+                        ),
+                'id' => 'w0',
+      ),
+
+       'fieldClass' => 'yii\\widgets\\ActiveField',
+       'fieldConfig' => array (),
+       'encodeErrorSummary' => true,
+       'errorSummaryCssClass' => 'error-summary',
+       'requiredCssClass' => 'required',
+       'errorCssClass' => 'has-error',
+       'successCssClass' => 'has-success',
+       'validatingCssClass' => 'validating',
+       'enableClientValidation' => true,
+       'enableAjaxValidation' => false,
+       'enableClientScript' => true,
+       'validationUrl' => NULL,
+       'validateOnSubmit' => true,
+       'validateOnChange' => true,
+       'validateOnBlur' => true,
+       'validateOnType' => false,
+       'validationDelay' => 500,
+       'ajaxParam' => 'ajax',
+       'ajaxDataType' => 'json',
+       'scrollToError' => true,
+       'attributes' => array (),
+       '_fields' => array (),
+       '_id' => 'w0',
+       '_view' => NULL,
+       '_events' => array (),
+       '_behaviors' => NULL,
+
+ActiveField :: render($content = null) метод для рендинга поля
+    $this->textInput(); поле input <input type="text" id="contactform-text" class="form-control" name="ContactForm[text]">
+    $this->label(); <label class="control-label" for="contactform-text">Текстовое поле</label>
+    $this->error($options = []) <div class="help-block"></div>
+    $this->hint(null); ""
+
+    return $this->begin() . "\n" . $content . "\n" . $this->end(); Рендинг
+        begin()
+            if ($this->form->enableClientScript) клиентсикй скрипт включен да
+                $clientOptions = $this->getClientOptions();
+                        enableAjaxValidation
+                        $enableClientValidation
+                        clientValidateAttribute($model, $attribute, $view)
+                            RequiredValidator
+                                ValidationAsset::register($view); регистрация ассета
+                                    $view->registerAssetBundle(get_called_class())
+                        return yii.validation.required(value, messages, {"message":"Your name cannot be blank."});
+                            yii.validation.string(value, messages, {"message":"Your name must be a string.","min":3,"tooShort":"Your name should contain at least 3 characters.","max":10,"tooLong":"Your name should contain at most 10 characters.","skipOnEmpty":1});
+                id = contactform-text
+                name = text
+                container .field-contactform-text
+                input #contactform-text
+                error .help-block
+                encodeError true
+                validateonChange true
+                onBlur true
+                onType false
+                    new JsExpression
+                validate js code
+                    function (attribute, value, messages, deferred, $form) {
+                    yii.validation.required(value, messages, {"message":"Your name cannot be blank."});
+                    yii.validation.string(value, messages, {"message":"Your name must be a string.","min":3,"tooShort":"Your name should contain at least 3 characters.","max":10,"tooLong":"Your name should contain at most 10 characters.","skipOnEmpty":1});}
+        end()
+        ActiveForm::run() Итоговое формирование js
+            id = w0
+            option = []
+            attributes = [
+                {"id":"contactform-text",
+                 "name":"text",
+                 "container":".field-contactform-text",
+                 "input":"#contactform-text",
+                 "validate":function (attribute, value, messages, deferred, $form)
+                        {yii.validation.required(value, messages, {"message":"Your name cannot be blank."});
+                         yii.validation.string(value, messages, {"message":"Your name must be a string.","min":3,"tooShort":"Your name should contain at least 3 characters.","max":10,"tooLong":"Your name should contain at most 10 characters.","skipOnEmpty":1});}
+                 }
+            ]
+        Формирование js
+            jQuery('#w0').yiiActiveForm([
+                {"id":"contactform-text",
+                 "name":"text",
+                 "container":".field-contactform-text",
+                 "input":"#contactform-text",
+                 "validate":function (attribute, value, messages, deferred, $form) {yii.validation.required(value, messages, {"message":"Your name cannot be blank."});yii.validation.string(value, messages, {"message":"Your name must be a string.","min":3,"tooShort":"Your name should contain at least 3 characters.","max":10,"tooLong":"Your name should contain at most 10 characters.","skipOnEmpty":1});}}]
+            , []);

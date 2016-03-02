@@ -1,0 +1,83 @@
+Начало 0--App-start
+index.php
+    base/Application::__construct() Конструктор приложения
+        base/Object::__construct() Конструктор обьекта
+            base/Application::init() Инициализация приложения
+TODO            1.web\Application::state = 1 application is initializing  Контрольная точка
+                2.web/Application->bootstrap(); Стартовые действия
+                    1.Получаем текущий запрос $request = $this->getRequest();
+                        ServiceLocator::get('request')
+                            Yii::createObject($definition) Создать новый обьект с теми зависимостями которые уже есть
+                                YiBase::$container->get($class, $params, $type)
+                                    Container::build($class, $params, $config)
+                                        Container::getDependencies($class)
+                                            new ReflectionClass($class)
+                                                YiiBase::autoload('web/Request')
+                                                    include($classFile)
+                                                        web/Request => base/Request
+                                            Container::dependicies Положили обьект запроса
+                                        Container::resolveDependencies($dependencies, $reflection)
+                                        ReflectionClass->newInstanceArgs($dependencies)
+                                            Object::__construct($config = [])
+                                                Yii::configure($this, $config) Сконфигурируем обьект
+                                                init() Инициализация если есть у компонента в данном случае его нет
+                    2.Установки псевдонимов @webroot @web В зависомости от текущего запроса
+                    3.base/Application::bootstrap();
+                        1.Работаем с расширениями @vendor/yiisoft/extensions.php
+                        2.Подключаем этот фаил и добавляем расширения в web/Application::extensions
+                              'yiisoft/yii2-swiftmailer'
+                              'yiisoft/yii2-codeception'
+                              'yiisoft/yii2-bootstrap'
+                              'yiisoft/yii2-debug'
+                              'yiisoft/yii2-gii'
+                              'yiisoft/yii2-faker'
+                            С их конфигурацией
+                        3.Установим алиасы для расширений
+                        4.Если у расширения есть 'bootstrap' то обьект должен создатьться сейчас
+                        5.!!!Важно нужно определить что подгружать в первую очередь
+                        6. Проверим web/Application::bootstrap там 3 компонента log debug gii
+                        7.Первый класс log
+                            1.ServiceLocator::has($class) Проверим вообще он есть в зависомостях
+                            2.Есть тогда создаем обьект get('log') c теми насторойками которые есть в definition
+TODO                        3.Запишем в trace Yii::trace('Bootstrap with you log')
+                                getLogger() Yii::logger обьект логгера
+                                    log/Logger::log()
+                                        1.microtime(true) время
+                                        2.debug_backtrace — Выводит стек вызовов функций в массив
+                                            где содержиться путь до вызова текущей функции
+                                            file line function class type
+                                        3.Удаляем инфо о index.php
+                                        4.Бегаем по всему стеку вызывов foreach()
+                                        5.Сообщение сохраняем в log::message
+                            4. Все сообщение сохранено
+                         8.Далее модуль debug
+                            1.Проверка что это модуль ,да так и есть
+                            2.Module::hasModule($id)
+                            3.Вернем этот модуль Module::getModule($id, $load = true)
+TODO                            1.Запишем в трайс Yii::trace("Loading module: $id", __METHOD__)
+                                2.Создадим обьект модуля BaseYii::createObject()
+                                3.Module::setInstance($instance) Установим модуль
+                                    Добавим его в Application::LoadedModules  это уже второй после модуля приложения
+                            4.Вернем модуль
+TODO                        5. Запишем в трайс Yii::trace('Bootstrap with ' . get_class($component) . '::bootstrap()', __METHOD__);
+                            6.debug/Module::bootstrap($this);
+                                1.Определяем внуттрений класс для ведения логов модуля
+                                2.Навешиваем обработчик на событие EVENT_BEFORE_REQUEST
+                                    $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app) {
+                                                $app->getView()->on(View::EVENT_END_BODY, [$this, 'renderToolbar']);
+                                            });
+                                     где Component->on()
+                                         1.Проверяем поведения если есть Component::ensureBehaviors()
+                                            1.Обращение идет к методу  Component::behaviors() который содержит массив поведений для компонента
+                                         2.Присвоем Component::_events[$name] событие и действие то есть оно сейчас в стеке событий
+                                    Добавим правила $app->getUrlManager()->addRules
+                         9. Модуль gii Процесс будет повторен
+TODO                        1. Две записи в трейс Loading module и Bootstrap with
+                            2. Процесс аналогичен модулю debug...
+    Процес завершен все модули сконфигурированны далее запуск 2--App--run
+
+base/Application
+    __construct($config = [])
+web/Application
+
+
