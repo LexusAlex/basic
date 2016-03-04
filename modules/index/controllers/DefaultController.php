@@ -13,6 +13,7 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+        $this->view->title = $this->action->uniqueId;
         return $this->render('index');
     }
 }

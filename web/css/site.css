@@ -49,3 +49,7 @@ form {
 .mycol {
     border: 1px black solid;
 }
+.menu{
+    background-color: #424b5f;
+    height: 65px;
+}
