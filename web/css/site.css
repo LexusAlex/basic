@@ -6,8 +6,8 @@ html {
 }
 
 body {
-    font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
-    line-height: 1.6;
+    font-size: 16px; /* currently ems cause chrome bug misinterpreting rems on body element */
+    line-height: 20px;
     font-weight: 400;
     font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #222;
@@ -39,7 +39,13 @@ ol,
 form {
     margin-bottom: 2.5rem;
 }
-
+p{
+    font-family: "Open Sans",sans-serif;
+    color: #333;
+    line-height: 30px;
+    margin: 20px 0;
+    text-align: left;
+}
 .one {
     background-color: #2aabd2;
     border: 1px black solid;
@@ -53,3 +59,24 @@ form {
     background-color: #424b5f;
     height: 65px;
 }
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+ul.pagination li.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
