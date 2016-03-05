@@ -1,0 +1,87 @@
+ListView Как все работает
+    1.Создать new ActiveDataProvider
+        query :: ActiveQuery
+        key , db , id _sort _pagination _keys _models _totalCount
+        ActiveDataProvider -> BaseDataProvider -> DataProviderInterface
+        1.Создать модель Post -> Active Record -> BaseActiveRecord -> Model -> Arrayable -> ArrayableTrait -> ActiveRecordInterface
+        2.Post::find() Запрос на выборку SELECT COUNT(*) FROM `post` SELECT * FROM `post` LIMIT 2
+        3.setPagination($value) PageSize = 2 PageSizeParam = false
+            добавили обьект _pagination::Pagination
+        ActiveDataProvider::init()
+        DataProvider сформирован
+    2.\yii\widgets\ListView::widget() Запуск виджета
+        ListView -> BaseListView -> Widget
+        1.Запуск виджета Widget::widget($config = [])
+            1.ob_start(); ob_implicit_flush(false);
+            2.установка класса ListView
+            3.$widget - обьект виджета
+
+                   'itemOptions' => []
+                   'itemView' => '@app/modules/index/views/default/_post',
+                   'viewParams' => []
+                   'separator' => '',
+                   'options' => array (
+                        'class' => 'list-view',
+                        'id' => 'w0',
+                      ),
+                   'dataProvider' =>  yii\data\ActiveDataProvider::yii\db\ActiveQuery::
+                    yii\data\Pagination::__set_state(array(
+                       'pageParam' => 'page',
+                       'pageSizeParam' => false,
+                       'forcePageParam' => true,
+                       'route' => NULL,
+                       'params' => NULL,
+                       'urlManager' => NULL,
+                       'validatePage' => true,
+                       'totalCount' => 0,
+                       'defaultPageSize' => 20,
+                       'pageSizeLimit' => array (0 => 1, 1 => 50,),
+                       '_pageSize' => 2,
+                       '_page' => NULL,
+                    )),
+                     '_keys' => NULL,
+                     '_models' => NULL,
+                     '_totalCount' => NULL,
+
+                   'pager' => []
+                   'sorter' => []
+                   'summary' => NULL,
+                   'summaryOptions' => array ('class' => 'summary',),
+                   'showOnEmpty' => false,
+                   'emptyText' => 'No results found.',
+                   'emptyTextOptions' => array ('class' => 'empty',),
+                   'layout' => '{summary}{items}{pager}',
+                   '_id' => 'w0',
+                   '_view' => NULL,
+            4.Widget::run() Запуск виджета
+                1. Проверка на то показывать если пусто и что колличество записей больше 0
+                2. Проверка что существует pagination и что запрос ActiveQuery сформирован
+                3. $pagination->totalCount = 4(послали запрос SELECT COUNT(*) FROM `post` узнали 4 записи)
+                    Считаем колличество - prepareTotalCount()
+                        $query->limit(-1)
+                              ->offset(-1)
+                              ->orderBy([])
+                              ->count('*', $this->db);
+                4.$query->limit($pagination->getLimit())
+                        ->offset($pagination->getOffset());
+                            1.$pagination->getLimit() Узнаем лимит
+                                1.$this->getPageSize();
+                                    1. Проверяем размер страницы не ноль
+                                2. PageSize = 2
+                                3. Проверка 2 < 1 ? -1 : 2 ///вернем 2
+                            limit = 2
+                            2.$pagination->getOffset() Смещение
+                                PageSize = 2
+                                2 < 1 ? 0 : $this->getPage() * 2;
+                                    getPage($recalculate = false)
+                                    setPage
+                                        getPageCount()
+                                            Проверка pageSize < 1 то 4 > 0 ? 1 : 0
+                                            Иначе у нас totalCount = $this->4 < 0 ? 0 : (int) 4 то есть 4
+                                            return (int) ((4 + 2 - 1) / 2); // ~2
+                5. запрос в базу $query->all($this->db); SELECT * FROM `post` LIMIT 2
+                6. Два обьекта activeRecord Вернем их в DataProvider
+                7. renderSection($name)
+
+
+
