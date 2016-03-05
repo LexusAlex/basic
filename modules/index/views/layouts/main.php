@@ -8,9 +8,8 @@
 
     <div class="grid no-pad">
         <div class="span-12">
-            <div class="grid justify-space-around no-pad">
-                <div class="span-3">1</div>
-                <div class="span-9">
+            <div class="grid justify-space-around">
+                <div class="span-8 span-10-xl span-10-lg span-12-md span-12-sm span-12-xs">
                     <?= \yii\widgets\Breadcrumbs::widget([
                         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                     ]) ?>

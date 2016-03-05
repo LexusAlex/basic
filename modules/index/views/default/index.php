@@ -5,6 +5,7 @@
  */
 ?>
 <h1>Блог</h1>
-<?php
-echo $this->context->action->uniqueId;
+
+<?
+echo $listView;
 ?>
