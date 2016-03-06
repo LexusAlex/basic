@@ -10,7 +10,9 @@
         </div>
         <div class="grid">
             <div class="span-12">
-                <?php echo $model->anons;?>
+                <p>
+                    <?php echo $model->anons;?>
+                </p>
             </div>
         </div>
     </div>

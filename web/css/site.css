@@ -42,7 +42,7 @@ form {
 p{
     font-family: "Open Sans",sans-serif;
     color: #333;
-    line-height: 30px;
+    line-height: 160%;
     margin: 20px 0;
     text-align: left;
 }
