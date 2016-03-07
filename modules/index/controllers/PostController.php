@@ -5,6 +5,8 @@ namespace app\modules\index\controllers;
 
 use app\modules\index\models\Post;
 use vova07\imperavi\actions\GetAction;
+use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -61,6 +63,69 @@ class PostController extends Controller
         ];
     }
 
+    public function actionIndex()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Post::find(),
+        ]);
+
+        $gridView = GridView::widget([
+            'dataProvider' => $dataProvider,
+            'tableOptions' => [
+                'class' => ''
+            ],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                'id',
+                'title',
+                [
+                    'attribute'=>'created_at',
+                    'label'=>'Создано',
+                    'format'=>'datetime', // Доступные модификаторы - date:datetime:time
+                    //'headerOptions' => ['width' => '200'],
+                ],
+                [
+                    'attribute'=>'updated_at',
+                    'label'=>'Обновлено',
+                    'format'=>'datetime', // Доступные модификаторы - date:datetime:time
+                    //'headerOptions' => ['width' => '200'],
+                ],
+                //'anons:html',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Действия',
+                    'headerOptions' => ['width' => '80'],
+                    'template' => '{view} {update} {delete}{link}',
+                    'buttons'=>[
+                        'update' => function ($url, $model, $key) {
+                            $options = array_merge([
+                                'title' => 'Update',
+                                'aria-label' => 'Update',
+                                'data-pjax' => '0',
+                                'class' => 'button button-primary button-small',
+                            ]);
+                            return \yii\helpers\Html::a('update', $url, $options);
+                        },
+                        'delete' => function ($url, $model, $key) {
+                            $options = array_merge([
+                                'title' => 'Delete',
+                                'aria-label' => 'Delete',
+                                'data-confirm' => 'Are you sure you want to delete this item?',
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                                'class' => 'button button-primary button-small',
+                            ]);
+                            return \yii\helpers\Html::a('delete', $url, $options);
+                        },
+                    ],
+                ],
+            ],
+        ]);
+        return $this->render('index', [
+            'gridView' => $gridView,
+        ]);
+    }
+
     public function actionCreate()
     {
         $model = new Post();
@@ -68,7 +133,7 @@ class PostController extends Controller
         if ($model->load(\Yii::$app->request->post())) {
             if ($model->save()) {
                 //var_dump($model);
-                return $this->refresh();
+                return $this->redirect(['post/index']);
             }
         } else {
             //$model->author_id = \Yii::$app->user->id;
@@ -92,7 +157,7 @@ class PostController extends Controller
         if ($model->load(\Yii::$app->request->post())) {
             if ($model->save()) {
                 //var_dump($model);
-                return $this->refresh();
+                return $this->redirect(['post/index']);
             }
         } else {
             //$model->author_id = \Yii::$app->user->id;
@@ -114,6 +179,6 @@ class PostController extends Controller
         else{
             $model->delete();
         }
-        return $this->redirect(['index']);
+        return $this->redirect(['post/index']);
     }
 }
