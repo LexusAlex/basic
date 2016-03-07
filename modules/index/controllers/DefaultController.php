@@ -16,7 +16,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Post::find()->where('status=1'),
+            'query' => Post::find()->where('status=1')->orderBy('id DESC'),
             'pagination' => [
                 'pageSize' => 3,
                 'pageSizeParam' => false
