@@ -5,7 +5,7 @@
                 <h2><a href=""><?php echo $model->title;?></a></h2>
             </div>
             <div class="span-3 span-10-sm">
-                <h6><?php echo Yii::$app->formatter->asDatetime($model->created_at, 'medium'); ?></h6>
+                <h6><?php echo Yii::$app->formatter->asDatetime($model->created_at === $model->updated_at ? $model->created_at : $model->updated_at, 'medium'); ?></h6>
             </div>
         </div>
         <div class="grid">

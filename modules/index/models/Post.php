@@ -3,6 +3,8 @@
 namespace app\modules\index\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -15,8 +17,29 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends ActiveRecord
 {
+
+    const STATUS_PUBLISH = 1;
+
+    const STATUS_DRAFT = 0;
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                /*'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],*/
+                // если вместо метки времени UNIX используется datetime:
+                // 'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
     /**
      * @return string
      */
