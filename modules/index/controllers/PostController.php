@@ -4,6 +4,7 @@ namespace app\modules\index\controllers;
 
 
 use app\modules\index\models\Post;
+use vova07\imperavi\actions\GetAction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -28,6 +29,35 @@ class PostController extends Controller
                 ],
             ],*/
 
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'images-get' => [
+                'class' => 'vova07\imperavi\actions\GetAction',
+                'url' => 'http://app.yii2/images/', // Directory URL address, where files are stored.
+                'path' => '@webroot/images', // Or absolute path to directory where files are stored.
+                'type' => GetAction::TYPE_IMAGES,
+            ],
+            'files-get' => [
+                'class' => 'vova07\imperavi\actions\GetAction',
+                'url' => 'http://app.yii2/files/', // Directory URL address, where files are stored.
+                'path' => '@webroot/files', // Or absolute path to directory where files are stored.
+                'type' => GetAction::TYPE_FILES,
+            ],
+            'image-upload' => [
+                'class' => 'vova07\imperavi\actions\UploadAction',
+                'url' => 'http://app.yii2/images/', // Directory URL address, where files are stored.
+                'path' => '@webroot/images' // Or absolute path to directory where files are stored.
+            ],
+            'file-upload' => [
+                'class' => 'vova07\imperavi\actions\UploadAction',
+                'url' => 'http://app.yii2/files/', // Directory URL address, where files are stored.
+                'path' => '@webroot/files', // Or absolute path to directory where files are stored.
+                'uploadOnlyImage' => false, // For not image-only uploading.
+            ],
         ];
     }
 

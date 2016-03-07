@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use vova07\imperavi\Widget;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\index\models\Post */
@@ -15,8 +16,55 @@ use yii\widgets\ActiveForm;
     <div class="span-10 span-12-md">
         <?php $form = ActiveForm::begin(['options' => ['class' => 'forms']]); ?>
         <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>
-        <?= $form->field($model, 'anons')->textarea([]) ?>
-        <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+
+        <?php
+        echo $form->field($model, 'anons')->widget(Widget::className(), [
+            'settings' => [
+                'lang' => 'ru',
+                'minHeight' => 100,
+                'imageManagerJson' => \yii\helpers\Url::to(['/index/post/images-get']),
+                'imageUpload' => \yii\helpers\Url::to(['/index/post/image-upload']),
+                'fileManagerJson' => \yii\helpers\Url::to(['/index/post/files-get']),
+                'fileUpload' => \yii\helpers\Url::to(['/index/post/file-upload']),
+                'plugins' => [
+                    'clips',
+                    'fullscreen',
+                    'imagemanager',
+                    'filemanager',
+                    'fontcolor',
+                    'fontfamily',
+                    'fontsize',
+                    'table',
+                ],
+            ],
+
+        ]);
+        ?>
+
+        <?php
+        echo $form->field($model, 'content')->widget(Widget::className(), [
+            'settings' => [
+                'lang' => 'ru',
+                'minHeight' => 200,
+                'imageManagerJson' => \yii\helpers\Url::to(['/index/post/images-get']),
+                'imageUpload' => \yii\helpers\Url::to(['/index/post/image-upload']),
+                'fileManagerJson' => \yii\helpers\Url::to(['/index/post/files-get']),
+                'fileUpload' => \yii\helpers\Url::to(['/index/post/file-upload']),
+                'plugins' => [
+                    'clips',
+                    'fullscreen',
+                    'imagemanager',
+                    'filemanager',
+                    'fontcolor',
+                    'fontfamily',
+                    'fontsize',
+                    'table',
+                ],
+            ],
+
+        ]);
+        ?>
+
         <?= $form->field($model, 'status')->dropDownList(
             [\app\modules\index\models\Post::STATUS_DRAFT => 'Черновик', \app\modules\index\models\Post::STATUS_PUBLISH => 'Опубликован']
         ) ?>
