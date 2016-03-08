@@ -14,7 +14,7 @@ use vova07\imperavi\Widget;
 <div class="grid justify-center">
 
     <div class="span-10 span-12-md">
-        <?php $form = ActiveForm::begin(['options' => ['class' => 'forms']]); ?>
+        <?php $form = ActiveForm::begin(['options' => ['class' => 'forms'],'errorCssClass' =>'alert alert-error','successCssClass' => 'alert']); ?>
         <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>
 
         <?php

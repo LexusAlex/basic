@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $anons
  * @property string $content
  * @property integer $status
+ * @property string $slug
  * @property string $created_at
  * @property string $updated_at
  */
@@ -38,6 +39,18 @@ class Post extends ActiveRecord
                 // если вместо метки времени UNIX используется datetime:
                 // 'value' => new Expression('NOW()'),
             ],
+            'slug' => [
+                'class' => 'Zelenin\yii\behaviors\Slug',
+                'slugAttribute' => 'slug',
+                'attribute' => 'title',
+                // optional params
+                'ensureUnique' => true,
+                'replacement' => '-',
+                'lowercase' => true,
+                'immutable' => false,
+                // If intl extension is enabled, see http://userguide.icu-project.org/transforms/general.
+                'transliterateOptions' => 'Russian-Latin/BGN; Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;'
+            ]
         ];
     }
     /**
@@ -55,10 +68,11 @@ class Post extends ActiveRecord
     {
         return [
             [['title', 'anons', 'content', 'status'], 'required'],
-            [['anons', 'content'], 'string'],
+            [['anons', 'content', 'slug'], 'string'],
             [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['title'], 'string', 'max' => 255]
+            [['title'], 'string', 'max' => 255],
+            ['title', 'duplicateTitle'],
         ];
     }
 
@@ -76,5 +90,20 @@ class Post extends ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public function duplicateTitle($a)
+    {
+        $record = $this::find()->where('title =:name',[':name'=>$this->title])->one();
+        //var_dump($record);
+        if ($record !== null) {
+            $errorMsg = 'Имя уже используется';
+            $this->addError($a, $errorMsg);
+        }
+
+        /*if(strlen($this->password)<=8) {
+            $errorMsg= 'Password must be at least 8 symbols length';
+            $this->addError('password',$errorMsg);
+        }*/
     }
 }

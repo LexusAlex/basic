@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
     <div class="span-10 span-12-md">
         <?php $form = ActiveForm::begin(['options' => ['class' => 'forms']]); ?>
         <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'slug')->textInput(['maxlength' => 255]) ?>
         <?php
         echo $form->field($model, 'anons')->widget(\vova07\imperavi\Widget::className(), [
             'settings' => [

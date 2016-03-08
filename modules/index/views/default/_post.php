@@ -2,7 +2,7 @@
     <div class="span-12">
         <div class="grid justify-space-around">
             <div class="span-9 span-10-sm">
-                <h2><a href=""><?php echo $model->title;?></a></h2>
+                <h2><a href="<?php echo \yii\helpers\Url::to(['view','slug' => $model->slug]);?>"><?php echo $model->title;?></a></h2>
             </div>
             <div class="span-3 span-10-sm">
                 <h6><?php echo Yii::$app->formatter->asDatetime($model->created_at === $model->updated_at ? $model->created_at : $model->updated_at, 'medium'); ?></h6>
@@ -17,6 +17,5 @@
         </div>
     </div>
 </div>
-
 
 <hr>

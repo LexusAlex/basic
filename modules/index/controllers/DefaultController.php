@@ -5,6 +5,7 @@ namespace app\modules\index\controllers;
 use app\modules\index\models\Post;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class DefaultController
@@ -46,5 +47,19 @@ class DefaultController extends Controller
         return $this->render('index', [
             'listView' => $listView,
         ]);
+    }
+
+    public function actionView($slug)
+    {
+        $model = Post::find()->where('slug = :name AND status = 1',[':name'=>$slug])->one();
+        if ($model !== null)
+        {
+            return $this->render('view', [
+                'model' => $model,
+            ]);
+        } else {
+            throw new NotFoundHttpException('The requested post does not exist.');
+        }
+
     }
 }

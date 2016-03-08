@@ -7,6 +7,7 @@ use app\modules\index\models\Post;
 use vova07\imperavi\actions\GetAction;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -95,7 +96,7 @@ class PostController extends Controller
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Действия',
                     'headerOptions' => ['width' => '80'],
-                    'template' => '{view} {update} {delete}{link}',
+                    'template' => '{update} {delete} {view}',
                     'buttons'=>[
                         'update' => function ($url, $model, $key) {
                             $options = array_merge([
@@ -117,6 +118,18 @@ class PostController extends Controller
                             ]);
                             return \yii\helpers\Html::a('delete', $url, $options);
                         },
+                        'view' => function ($url, $model, $key) {
+                            $options = array_merge([
+                                'title' => 'View',
+                                'aria-label' => 'View',
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                                'class' => 'button button-primary button-small',
+                                'target'=>"_blank",
+                            ]);
+                            $u = Url::to(['/index/default/view','slug' => $model->slug]);
+                            return \yii\helpers\Html::a('view', $u, $options);
+                        },
                     ],
                 ],
             ],
@@ -130,11 +143,8 @@ class PostController extends Controller
     {
         $model = new Post();
             //$model->save()
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save()) {
-                //var_dump($model);
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['post/index']);
-            }
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('create', [
