@@ -24,6 +24,7 @@ class Post extends ActiveRecord
     const STATUS_PUBLISH = 1;
 
     const STATUS_DRAFT = 0;
+
     /**
      * @return array
      */
@@ -53,6 +54,7 @@ class Post extends ActiveRecord
             ]
         ];
     }
+
     /**
      * @return string
      */
@@ -94,9 +96,9 @@ class Post extends ActiveRecord
 
     public function duplicateTitle($a)
     {
-        $record = $this::find()->where('title =:name',[':name'=>$this->title])->one();
+        $record = $this::find()->where('title =:name', [':name' => $this->title])->one();
         if ($record !== null) {
-            if(Yii::$app->controller->action->id == 'create'){
+            if (Yii::$app->controller->action->id == 'create') {
                 $errorMsg = 'Имя уже используется';
                 $this->addError($a, $errorMsg);
             }

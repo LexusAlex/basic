@@ -14,11 +14,16 @@ use yii\web\NotFoundHttpException;
 class DefaultController extends Controller
 {
 
+    /**
+     * View all posts ListView
+     * @return string
+     * @throws \Exception
+     */
     public function actionIndex()
     {
         \Yii::$container->set('yii\widgets\LinkPager', [
             'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
-            'firstPageCssClass'=> '',
+            'firstPageCssClass' => '',
             'firstPageLabel' => 'Первая',
             'lastPageLabel' => 'Последняя',
             'nextPageLabel' => 'Следующая',
@@ -29,7 +34,7 @@ class DefaultController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Post::find()->where('status=1')->orderBy('id DESC'),
             'pagination' => [
-                'pageSize' => 3,
+                'pageSize' => 5,
                 'pageSizeParam' => false,
             ],
         ]);
@@ -37,33 +42,28 @@ class DefaultController extends Controller
         $listView = \yii\widgets\ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '@app/modules/index/views/default/_post',
-            //'itemOptions' =>
-            //'layout' => "{summary}\n{items}\n{pager}"
-            //'summary' => 'Запись - {begin} и {end}({count}) из {totalCount} Страница - {page} из {pageCount}',
             'summary' => '<div>Показано {count} из {totalCount} Страница {page} из {pageCount}</div>',
             'summaryOptions' => [
                 'tag' => 'span',
                 'class' => 'my-summary'
             ],
             'emptyText' => 'Список пуст',
-            /*'pager' => [
-                'firstPageLabel' => 'Первая',
-                'lastPageLabel' => 'Последняя',
-                'nextPageLabel' => 'Следующая',
-                'prevPageLabel' => 'Предыдущая',
-                'maxButtonCount' => 5,
-            ],*/
         ]);
         return $this->render('index', [
             'listView' => $listView,
         ]);
     }
 
+    /**
+     * View post
+     * @param $slug
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionView($slug)
     {
-        $model = Post::find()->where('slug = :name AND status = 1',[':name'=>$slug])->one();
-        if ($model !== null)
-        {
+        $model = Post::find()->where('slug = :name AND status = 1', [':name' => $slug])->one();
+        if ($model !== null) {
             return $this->render('view', [
                 'model' => $model,
             ]);

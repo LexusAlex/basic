@@ -1,4 +1,5 @@
 <?php
+/* @var $this \yii\web\View */
 $str = <<<'EOD'
 ( function( $ ) {
 $( document ).ready(function() {
@@ -19,31 +20,20 @@ $this->registerJs($str);?>
 <div class="grid">
     <div class="span-12">
         <div id='cssmenu'>
-            <ul>
-                <li><a href='#'><span>Home</span></a></li>
-                <li class='active has-sub'><a href='#'><span>Products</span></a>
-                    <ul>
-                        <li class='has-sub'><a href='#'><span>Product 1</span></a>
-                            <ul>
-                                <li><a href='#'><span>Sub Product</span></a></li>
-                                <li class='last'><a href='#'><span>Sub Product</span></a></li>
-                            </ul>
-                        </li>
-                        <li class='has-sub'><a href='#'><span>Product 2</span></a>
-                            <ul>
-                                <li><a href='#'><span>Sub Product</span></a></li>
-                                <li class='last'><a href='#'><span>Sub Product</span></a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href='#'><span>About</span></a></li>
-                <li class='last'><a href='#'><span>Contact</span></a></li>
-                <li class='last'><a href='#'><span>Contact</span></a></li>
-                <li class='last'><a href='#'><span>Contact</span></a></li>
-                <li class='last'><a href='#'><span>Contact</span></a></li>
-                <li class='last'><a href='#'><span>Contact</span></a></li>
-            </ul>
+            <?php
+            echo \yii\widgets\Menu::widget([
+                'items' => [
+                    ['label' => 'Главная', 'url' => ['default/index']],
+                    ['label' => 'Посты', 'url' => ['post/index'], 'options' => ['class' => 'has-sub'] /*,'visible' => false*/,'items' => [
+                        ['label' => 'Создать', 'url' => ['post/create']],
+                    ]],
+                ],
+                //'itemOptions' => ['class' => 'has-sub',],
+                'lastItemCssClass' => 'last',
+                'linkTemplate' => '<a href="{url}"><span>{label}</span></a>',
+                'activateParents' => true
+            ]);
+            ?>
         </div>
     </div>
 </div>

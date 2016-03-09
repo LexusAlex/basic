@@ -2,11 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
 /* @var $this yii\web\View */
 /* @var $model app\modules\index\models\Post */
 /* @var $form ActiveForm */
-
 ?>
 
 <h1>Обновить запись № <?php echo $model->id?></h1>
@@ -20,6 +18,7 @@ use yii\widgets\ActiveForm;
         echo $form->field($model, 'anons')->widget(\vova07\imperavi\Widget::className(), [
             'settings' => [
                 'lang' => 'ru',
+                'air' => true,
                 'minHeight' => 100,
                 'imageManagerJson' => \yii\helpers\Url::to(['/index/post/images-get']),
                 'imageUpload' => \yii\helpers\Url::to(['/index/post/image-upload']),

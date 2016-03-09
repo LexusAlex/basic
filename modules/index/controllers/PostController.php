@@ -17,6 +17,9 @@ use yii\web\NotFoundHttpException;
  */
 class PostController extends Controller
 {
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
@@ -35,6 +38,9 @@ class PostController extends Controller
         ];
     }
 
+    /**
+     * @return array
+     */
     public function actions()
     {
         return [
@@ -64,6 +70,10 @@ class PostController extends Controller
         ];
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -80,24 +90,24 @@ class PostController extends Controller
                 'id',
                 'title',
                 [
-                    'attribute'=>'created_at',
-                    'label'=>'Создано',
-                    'format'=>'datetime', // Доступные модификаторы - date:datetime:time
+                    'attribute' => 'created_at',
+                    'label' => 'Создано',
+                    'format' => 'datetime', // Доступные модификаторы - date:datetime:time
                     //'headerOptions' => ['width' => '200'],
                 ],
                 [
-                    'attribute'=>'updated_at',
-                    'label'=>'Обновлено',
-                    'format'=>'datetime', // Доступные модификаторы - date:datetime:time
+                    'attribute' => 'updated_at',
+                    'label' => 'Обновлено',
+                    'format' => 'datetime', // Доступные модификаторы - date:datetime:time
                     //'headerOptions' => ['width' => '200'],
                 ],
                 //'anons:html',
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'header'=>'Действия',
+                    'header' => 'Действия',
                     'headerOptions' => ['width' => '80'],
                     'template' => '{update} {delete} {view}',
-                    'buttons'=>[
+                    'buttons' => [
                         'update' => function ($url, $model, $key) {
                             $options = array_merge([
                                 'title' => 'Update',
@@ -125,9 +135,9 @@ class PostController extends Controller
                                 'data-method' => 'post',
                                 'data-pjax' => '0',
                                 'class' => 'button button-primary button-small',
-                                'target'=>"_blank",
+                                'target' => "_blank",
                             ]);
-                            $u = Url::to(['/index/default/view','slug' => $model->slug]);
+                            $u = Url::to(['/index/default/view', 'slug' => $model->slug]);
                             return \yii\helpers\Html::a('view', $u, $options);
                         },
                     ],
@@ -139,12 +149,15 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionCreate()
     {
         $model = new Post();
-            //$model->save()
+
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['post/index']);
+            return $this->redirect(['post/index']);
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('create', [
@@ -156,16 +169,21 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
+     */
     public function actionUpdate($id)
     {
         $model = Post::findOne($id);
-        if ($model == null){
+        if ($model == null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-            //$model->save()
+        //$model->save()
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['post/index']);
+            return $this->redirect(['post/index']);
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('update', [
@@ -177,13 +195,17 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
     public function actionDelete($id)
     {
         $model = Post::findOne($id);
-        if ($model == null){
+        if ($model == null) {
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
-        else{
+        } else {
             $model->delete();
         }
         return $this->redirect(['post/index']);
