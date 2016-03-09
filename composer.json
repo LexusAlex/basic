@@ -26,7 +26,8 @@
     "components/normalize.css": "3.0.*",
     "bower-asset/skeleton-css": "*",
     "bower-asset/flexnav": "*",
-    "vova07/yii2-imperavi-widget": "*"
+    "vova07/yii2-imperavi-widget": "*",
+    "zelenin/yii2-slug-behavior": "*"
   },
   "require-dev": {
     "yiisoft/yii2-codeception": "*",
