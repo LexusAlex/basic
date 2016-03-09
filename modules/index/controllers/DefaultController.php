@@ -16,11 +16,21 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+        \Yii::$container->set('yii\widgets\LinkPager', [
+            'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
+            'firstPageCssClass'=> '',
+            'firstPageLabel' => 'Первая',
+            'lastPageLabel' => 'Последняя',
+            'nextPageLabel' => 'Следующая',
+            'prevPageLabel' => 'Предыдущая',
+            'activePageCssClass' => 'current',
+            'maxButtonCount' => 3,
+        ]);
         $dataProvider = new ActiveDataProvider([
             'query' => Post::find()->where('status=1')->orderBy('id DESC'),
             'pagination' => [
                 'pageSize' => 3,
-                'pageSizeParam' => false
+                'pageSizeParam' => false,
             ],
         ]);
 
