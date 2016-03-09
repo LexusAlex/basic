@@ -164,11 +164,8 @@ class PostController extends Controller
         }
 
             //$model->save()
-        if ($model->load(\Yii::$app->request->post())) {
-            if ($model->save()) {
-                //var_dump($model);
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['post/index']);
-            }
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('update', [

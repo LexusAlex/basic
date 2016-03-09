@@ -95,10 +95,12 @@ class Post extends ActiveRecord
     public function duplicateTitle($a)
     {
         $record = $this::find()->where('title =:name',[':name'=>$this->title])->one();
-        //var_dump($record);
         if ($record !== null) {
-            $errorMsg = 'Имя уже используется';
-            $this->addError($a, $errorMsg);
+            if(Yii::$app->controller->action->id == 'create'){
+                $errorMsg = 'Имя уже используется';
+                $this->addError($a, $errorMsg);
+            }
+
         }
 
         /*if(strlen($this->password)<=8) {
