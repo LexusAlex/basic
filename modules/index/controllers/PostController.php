@@ -4,7 +4,6 @@ namespace app\modules\index\controllers;
 
 
 use app\modules\index\models\Post;
-use vova07\imperavi\actions\GetAction;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Url;
@@ -39,43 +38,22 @@ class PostController extends Controller
     }
 
     /**
-     * @return array
-     */
-    public function actions()
-    {
-        return [
-            'images-get' => [
-                'class' => 'vova07\imperavi\actions\GetAction',
-                'url' => 'http://app.yii2/images/', // Directory URL address, where files are stored.
-                'path' => '@webroot/images', // Or absolute path to directory where files are stored.
-                'type' => GetAction::TYPE_IMAGES,
-            ],
-            'files-get' => [
-                'class' => 'vova07\imperavi\actions\GetAction',
-                'url' => 'http://app.yii2/files/', // Directory URL address, where files are stored.
-                'path' => '@webroot/files', // Or absolute path to directory where files are stored.
-                'type' => GetAction::TYPE_FILES,
-            ],
-            'image-upload' => [
-                'class' => 'vova07\imperavi\actions\UploadAction',
-                'url' => 'http://app.yii2/images/', // Directory URL address, where files are stored.
-                'path' => '@webroot/images' // Or absolute path to directory where files are stored.
-            ],
-            'file-upload' => [
-                'class' => 'vova07\imperavi\actions\UploadAction',
-                'url' => 'http://app.yii2/files/', // Directory URL address, where files are stored.
-                'path' => '@webroot/files', // Or absolute path to directory where files are stored.
-                'uploadOnlyImage' => false, // For not image-only uploading.
-            ],
-        ];
-    }
-
-    /**
      * @return string
      * @throws \Exception
      */
     public function actionIndex()
     {
+        \Yii::$container->set('yii\widgets\LinkPager', [
+            'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
+            'firstPageCssClass' => '',
+            'firstPageLabel' => 'Первая',
+            'lastPageLabel' => 'Последняя',
+            'nextPageLabel' => 'Следующая',
+            'prevPageLabel' => 'Предыдущая',
+            'activePageCssClass' => 'current',
+            'maxButtonCount' => 3,
+        ]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => Post::find(),
         ]);

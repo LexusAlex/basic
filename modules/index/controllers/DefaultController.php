@@ -2,8 +2,10 @@
 
 namespace app\modules\index\controllers;
 
+use app\modules\index\models\LoginForm;
 use app\modules\index\models\Post;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -13,7 +15,35 @@ use yii\web\NotFoundHttpException;
  */
 class DefaultController extends Controller
 {
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['logout'],
+                'rules' => [
+                    [
+                        //'actions' => ['logout'],
+                        'allow' => true,
+                        //'roles' => ['?'],
+                    ],
+                ],
+            ],
 
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
     /**
      * View all posts ListView
      * @return string
@@ -71,5 +101,29 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('The requested post does not exist.');
         }
 
+    }
+
+    public function actionLogin()
+    {
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+            //return $this->redirect(['/']);
+        }
+        $model = new LoginForm();
+        if ($model->load(\Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+            //return $this->redirect(['/']);
+        } else {
+            $this->view->title = 'Авторизация';
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionLogout()
+    {
+        \Yii::$app->user->logout();
+        return $this->goHome();
     }
 }

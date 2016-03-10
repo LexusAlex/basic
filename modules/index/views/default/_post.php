@@ -15,6 +15,7 @@
         <div class="grid no-pad">
             <div class="span-12">
                 <?php echo $model->anons;?>
+                <a class="button button-primary" href="<?php echo \yii\helpers\Url::to(['view','slug' => $model->slug]);?>">Читать далее</a>
             </div>
         </div>
     </div>

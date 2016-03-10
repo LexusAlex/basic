@@ -21,6 +21,8 @@ use yii\db\ActiveRecord;
 class Post extends ActiveRecord
 {
 
+    const STATUS_PRIVATE = 2;
+
     const STATUS_PUBLISH = 1;
 
     const STATUS_DRAFT = 0;

@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use mihaildev\ckeditor\CKEditor;
+use mihaildev\elfinder\ElFinder;
 /* @var $this yii\web\View */
 /* @var $model app\modules\index\models\Post */
 /* @var $form ActiveForm */
@@ -15,51 +17,12 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>
         <?= $form->field($model, 'slug')->textInput(['maxlength' => 255]) ?>
         <?php
-        echo $form->field($model, 'anons')->widget(\vova07\imperavi\Widget::className(), [
-            'settings' => [
-                'lang' => 'ru',
-                'air' => true,
-                'minHeight' => 100,
-                'imageManagerJson' => \yii\helpers\Url::to(['/index/post/images-get']),
-                'imageUpload' => \yii\helpers\Url::to(['/index/post/image-upload']),
-                'fileManagerJson' => \yii\helpers\Url::to(['/index/post/files-get']),
-                'fileUpload' => \yii\helpers\Url::to(['/index/post/file-upload']),
-                'plugins' => [
-                    'clips',
-                    'fullscreen',
-                    'imagemanager',
-                    'filemanager',
-                    'fontcolor',
-                    'fontfamily',
-                    'fontsize',
-                    'table',
-                ],
-            ],
-
+        echo $form->field($model, 'anons')->widget(CKEditor::className(),[
+            'editorOptions' => ElFinder::ckeditorOptions(['elfinder'],['preset'=>'standart','inline'=>false]),
         ]);
-        ?>
 
-        <?php
-        echo $form->field($model, 'content')->widget(\vova07\imperavi\Widget::className(), [
-            'settings' => [
-                'lang' => 'ru',
-                'minHeight' => 200,
-                'imageManagerJson' => \yii\helpers\Url::to(['/index/post/images-get']),
-                'imageUpload' => \yii\helpers\Url::to(['/index/post/image-upload']),
-                'fileManagerJson' => \yii\helpers\Url::to(['/index/post/files-get']),
-                'fileUpload' => \yii\helpers\Url::to(['/index/post/file-upload']),
-                'plugins' => [
-                    'clips',
-                    'fullscreen',
-                    'imagemanager',
-                    'filemanager',
-                    'fontcolor',
-                    'fontfamily',
-                    'fontsize',
-                    'table',
-                ],
-            ],
-
+        echo $form->field($model, 'content')->widget(CKEditor::className(),[
+            'editorOptions' => ElFinder::ckeditorOptions(['elfinder'],['preset'=>'full','inline'=>false]),
         ]);
         ?>
         <?= $form->field($model, 'status')->dropDownList(

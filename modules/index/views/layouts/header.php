@@ -27,6 +27,8 @@ $this->registerJs($str);?>
                     ['label' => 'Посты', 'url' => ['post/index'], 'options' => ['class' => 'has-sub'] /*,'visible' => false*/,'items' => [
                         ['label' => 'Создать', 'url' => ['post/create']],
                     ]],
+                    ['label' => 'Вход', 'url' => ['default/login'],'visible' => \Yii::$app->user->isGuest],
+                    ['label' => 'Выход', 'url' => ['default/logout'],'visible' => !\Yii::$app->user->isGuest],
                 ],
                 //'itemOptions' => ['class' => 'has-sub',],
                 'lastItemCssClass' => 'last',
