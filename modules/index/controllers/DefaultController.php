@@ -23,15 +23,29 @@ class DefaultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                //'only' => ['logout'],
+                //'only' => ['logout','index'],
                 'rules' => [
                     [
-                        //'actions' => ['logout'],
-                        'allow' => true,
-                        //'roles' => ['?'],
+                        'actions' => ['login'], // Данное действие
+                        'allow' => true, // Могут выполнять
+                        'roles' => ['?'], // Только гости
                     ],
+                    [
+                        'actions' => ['logout'], // Данное действие
+                        'allow' => true, // Могут выполнять
+                        'roles' => ['@'], // Только авторизованные пользователи
+                    ],
+                    [
+                        'allow' => true,
+                    ]
                 ],
             ],
+            /*'verbs' => [ // Какие WEB методы могут применяться
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'], // Для action logout может быть только применен web метод post
+                ],
+            ],*/
 
         ];
     }
@@ -44,6 +58,7 @@ class DefaultController extends Controller
             ],
         ];
     }
+
     /**
      * View all posts ListView
      * @return string
@@ -72,13 +87,15 @@ class DefaultController extends Controller
         $listView = \yii\widgets\ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '@app/modules/index/views/default/_post',
-            'summary' => '<div>Показано {count} из {totalCount} Страница {page} из {pageCount}</div>',
+            //'summary' => '<div>Показано {count} из {totalCount} Страница {page} из {pageCount}</div>',
+            'summary' => false,
             'summaryOptions' => [
                 'tag' => 'span',
                 'class' => 'my-summary'
             ],
             'emptyText' => 'Список пуст',
         ]);
+        $this->view->title = 'Статьи про веб разработку и не только';
         return $this->render('index', [
             'listView' => $listView,
         ]);

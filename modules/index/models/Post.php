@@ -4,6 +4,7 @@ namespace app\modules\index\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 
 /**

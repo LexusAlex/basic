@@ -5,6 +5,7 @@ namespace app\modules\index\controllers;
 
 use app\modules\index\models\Post;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -22,17 +23,24 @@ class PostController extends Controller
     public function behaviors()
     {
         return [
-            /*'access' => [
+            'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                //'only' => ['logout','index'],
                 'rules' => [
+                    /*[
+                        'actions' => ['index'],
+                        'allow' => false, // Могут выполнять
+                        'roles' => ['admin'], // Только авторизованные пользователи
+                    ],*/
                     [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'allow' => true, // Могут выполнять
+                        'roles' => ['@'], // Только авторизованные пользователи
                     ],
+                    [
+                        'allow' => false,
+                    ]
                 ],
-            ],*/
+            ],
 
         ];
     }
@@ -57,7 +65,6 @@ class PostController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Post::find(),
         ]);
-
         $gridView = GridView::widget([
             'dataProvider' => $dataProvider,
             'tableOptions' => [
@@ -79,6 +86,18 @@ class PostController extends Controller
                     'format' => 'datetime', // Доступные модификаторы - date:datetime:time
                     //'headerOptions' => ['width' => '200'],
                 ],
+                [
+                    'attribute' => 'status',
+                    'label' => 'Статус',
+                    'content' => function ($model, $key, $index, $column) {
+                        if ($model->status === 1) {
+                            return 'Опубликован';
+                        } else {
+                            return 'Черновик';
+                        }
+                    }
+                ],
+
                 //'anons:html',
                 [
                     'class' => 'yii\grid\ActionColumn',
