@@ -180,6 +180,7 @@
 #cssmenu ul ul li:hover > a,
 #cssmenu ul ul li.active > a {
     color: #333333;
+    font-weight: bold;
 }
 #cssmenu ul ul li:first-child > a {
     border-top-left-radius: 3px;
