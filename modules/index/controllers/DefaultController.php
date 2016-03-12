@@ -95,7 +95,7 @@ class DefaultController extends Controller
             ],
             'emptyText' => 'Список пуст',
         ]);
-        $this->view->title = 'Статьи про веб разработку и не только';
+        $this->view->title = 'Технические статьи и заметки';
         return $this->render('index', [
             'listView' => $listView,
         ]);
@@ -111,6 +111,7 @@ class DefaultController extends Controller
     {
         $model = Post::find()->where('slug = :name AND status = 1', [':name' => $slug])->one();
         if ($model !== null) {
+            $this->view->title = $model->title;
             return $this->render('view', [
                 'model' => $model,
             ]);

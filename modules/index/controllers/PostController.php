@@ -154,7 +154,9 @@ class PostController extends Controller
         $model = new Post();
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['post/index']);
+            $msg = "Запись № {$model->id} {$model->title} успешно создана";
+            \Yii::$app->session->setFlash('success', $msg);
+            return $this->redirect(['/'.$model->slug]);
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('create', [
@@ -180,7 +182,9 @@ class PostController extends Controller
 
         //$model->save()
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['post/index']);
+            $msg = "Запись № {$model->id} {$model->title} успешно обновлена";
+            \Yii::$app->session->setFlash('info', $msg);
+            return $this->redirect(['/'.$model->slug]);
         } else {
             //$model->author_id = \Yii::$app->user->id;
             return $this->render('update', [
