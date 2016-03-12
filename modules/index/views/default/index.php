@@ -2,10 +2,11 @@
 
 /**
  * @var $this \yii\web\View
+ * @var $listView string
  */
+use \yii\helpers\Html;
 ?>
-<h1>Статьи</h1>
-
+    <h1><?php echo Html::encode($this->title); ?></h1>
 <?
 echo $listView;
 ?>

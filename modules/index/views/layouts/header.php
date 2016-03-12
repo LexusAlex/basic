@@ -1,22 +1,8 @@
 <?php
-/* @var $this \yii\web\View */
-$str = <<<'EOD'
-( function( $ ) {
-$( document ).ready(function() {
-$('#cssmenu').prepend('<div id="menu-button">Menu</div>');
-	$('#cssmenu #menu-button').on('click', function(){
-		var menu = $(this).next('ul');
-		if (menu.hasClass('open')) {
-			menu.removeClass('open');
-		}
-		else {
-			menu.addClass('open');
-		}
-	});
-});
-} )( jQuery );
-EOD;
-$this->registerJs($str);?>
+/**
+ * @var $this \yii\web\View
+ */
+?>
 <div class="grid">
     <div class="span-12">
         <div id='cssmenu'>
@@ -29,6 +15,7 @@ $this->registerJs($str);?>
                     ]],
                     ['label' => 'Вход', 'url' => ['default/login'],'visible' => \Yii::$app->user->isGuest,],
                     ['label' => 'Выход', 'url' => ['default/logout'],'visible' => !\Yii::$app->user->isGuest],
+                    ['label' => 'Написать автору', 'url' => ['default']],
                 ],
                 //'itemOptions' => ['class' => 'has-sub',],
                 'lastItemCssClass' => 'last',
