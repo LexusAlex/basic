@@ -312,7 +312,15 @@ custom icons - customize the small arrow inside the next and prev buttons
 .breadcrumb .current::before{
     content: normal;
 }
-
+blockquote {
+    background: #dbedff none repeat scroll 0 0;
+    border-left: 3px solid #0a6fb7;
+    padding: 8px 10px;
+}
+img {
+    width: 100%; /* ширина картинки */
+    height: auto; /* высота картинки */
+}
 .footer{
     height: 50px;
 }

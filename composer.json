@@ -29,7 +29,8 @@
     "zelenin/yii2-slug-behavior": "*",
     "mihaildev/yii2-ckeditor": "*",
     "mihaildev/yii2-elfinder": "*",
-    "nezhelskoy/yii2-highlight": "*"
+    "nezhelskoy/yii2-highlight": "*",
+    "2amigos/yii2-disqus-widget" : "~1.0"
   },
   "require-dev": {
     "yiisoft/yii2-codeception": "*",
