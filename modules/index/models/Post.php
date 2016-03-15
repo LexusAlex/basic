@@ -99,9 +99,12 @@ class Post extends ActiveRecord
 
     public function duplicateTitle($a)
     {
-        $record = $this::find()->where('title =:name', [':name' => $this->title])->one();
+        $record = $this::find()->select('title')
+                               ->where('title =:name', [':name' => $this->title])
+                               ->orWhere('slug =:slug', [':slug' => $this->slug])
+                               ->one();
         if ($record !== null) {
-            if (Yii::$app->controller->action->id == 'create') {
+            if ($this->isNewRecord) {
                 $errorMsg = 'Имя уже используется';
                 $this->addError($a, $errorMsg);
             }
