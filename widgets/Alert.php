@@ -4,10 +4,10 @@ namespace app\widgets;
 class Alert extends \yii\base\Widget
 {
     public $types = [
-        'info'    => 'alert', //blue
-        'error'   => 'alert alert-error', //red
-        'warning' => 'alert alert-warning', //orange
-        'success' => 'alert alert-done', //green
+        'info'    => 'a alert', //blue
+        'error'   => 'a alert alert-error', //red
+        'warning' => 'a alert alert-warning', //orange
+        'success' => 'a alert alert-done', //green
     ];
     //public $view;
 
@@ -27,11 +27,11 @@ class Alert extends \yii\base\Widget
                 $session->removeFlash($type);
             }
         }
-        $this->view->registerJs("$('.alert')
+        $this->view->registerJs("$('.a.alert')
 
                                         function func() {
-                                              $('.alert').fadeOut( 3000 );
-                                              //$('.alert').hide(3000);
+                                              $('.a.alert').fadeOut( 3000 );
+                                              //$('.a.alert').hide(3000);
                                             }
                                     setTimeout(func,5000);
                               ");

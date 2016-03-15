@@ -2,6 +2,7 @@
 
 namespace app\modules\index\controllers;
 
+use app\modules\index\models\ContactForm;
 use app\modules\index\models\LoginForm;
 use app\modules\index\models\Post;
 use yii\data\ActiveDataProvider;
@@ -55,6 +56,12 @@ class DefaultController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_DEV ? 't' : null,
+                //'minLength'=>2,
+                //'maxLength'=>4,
             ],
         ];
     }
@@ -143,5 +150,18 @@ class DefaultController extends Controller
     {
         \Yii::$app->user->logout();
         return $this->goHome();
+    }
+
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if ($model->load(\Yii::$app->request->post()) && $model->contact('a@b.ru')) {
+            \Yii::$app->session->setFlash('contactFormSubmitted');
+
+            return $this->refresh();
+        }
+        return $this->render('contact', [
+            'model' => $model,
+        ]);
     }
 }

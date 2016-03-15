@@ -15,7 +15,7 @@
                     ]],
                     ['label' => 'Вход', 'url' => ['default/login'],'visible' => \Yii::$app->user->isGuest,],
                     ['label' => 'Выход', 'url' => ['default/logout'],'visible' => !\Yii::$app->user->isGuest],
-                    ['label' => 'Написать автору', 'url' => ['default']],
+                    ['label' => 'Написать автору', 'url' => ['default/contact']],
                 ],
                 //'itemOptions' => ['class' => 'has-sub',],
                 'lastItemCssClass' => 'last',

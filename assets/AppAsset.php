@@ -27,7 +27,7 @@ class AppAsset extends AssetBundle
         'css/nav.css'
     ];
     public $js = [
-        //'js/responsive-nav.js'
+        'js/menu.js'
     ];
     public $depends = [
         'app\assets\NormalizeAsset',

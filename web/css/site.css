@@ -46,6 +46,12 @@ p{
     margin: 20px 0;
     text-align: left;
 }
+pre{
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: auto;
+}
 .one {
     background-color: #2aabd2;
     border: 1px black solid;

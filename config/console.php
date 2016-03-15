@@ -30,6 +30,9 @@ return [
             'password' => 'root',
             'charset' => 'utf8',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+        ],
     ],
     'params' => ['adminEmail' => 'admin@example.com'],
 ];

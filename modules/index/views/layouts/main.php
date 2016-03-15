@@ -14,6 +14,7 @@
             'activeItemTemplate' => "<li class=\"current\">{link}</li>\n",
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) */?>
+        <?= \app\widgets\Alert::widget() ?>
         <?php echo $content; ?>
     </div>
 </div>
