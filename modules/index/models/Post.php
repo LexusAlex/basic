@@ -4,7 +4,6 @@ namespace app\modules\index\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 
 /**
@@ -16,6 +15,7 @@ use yii\db\ActiveRecord;
  * @property string $content
  * @property integer $status
  * @property string $slug
+ * @property integer $category_id
  * @property string $created_at
  * @property string $updated_at
  */
@@ -99,7 +99,7 @@ class Post extends ActiveRecord
 
     public function duplicateTitle($a)
     {
-        $record = $this::find()->select('title')
+        $record = $this::find()->select(['title','slug'])
                                ->where('title =:name', [':name' => $this->title])
                                ->orWhere('slug =:slug', [':slug' => $this->slug])
                                ->one();
@@ -115,5 +115,26 @@ class Post extends ActiveRecord
             $errorMsg= 'Password must be at least 8 symbols length';
             $this->addError('password',$errorMsg);
         }*/
+    }
+    /**
+     * $p = Post::find()->where(['id'=>3])->one();
+       $r = $p->category;
+       $r;
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+    }
+    /**
+     * ConclusionPosts relate of type
+     * echo count($model->conclusionPosts($model::STATUS_PUBLISH)).'<br>';
+       echo count($model->conclusionPosts($model::STATUS_DRAFT)).'<br>';
+       echo count($model->conclusionPosts($model::STATUS_PRIVATE)).'<br>';
+     * @param $type
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function conclusionPosts($type){
+        return $allRecords = $this::find()->where(['status'=>$type])->all();
     }
 }

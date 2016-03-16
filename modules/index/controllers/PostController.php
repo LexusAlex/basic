@@ -2,24 +2,21 @@
 
 namespace app\modules\index\controllers;
 
-
+use Yii;
 use app\modules\index\models\Post;
-use yii\data\ActiveDataProvider;
+use app\modules\index\models\PostSearch;
 use yii\filters\AccessControl;
-use yii\grid\GridView;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+
 
 /**
- * Class PostController
+ * Class PController
  * @package app\modules\index\controllers
  */
 class PostController extends Controller
 {
-    /**
-     * @return array
-     */
     public function behaviors()
     {
         return [
@@ -41,174 +38,100 @@ class PostController extends Controller
                     ]
                 ],
             ],
-
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
         ];
     }
 
     /**
-     * @return string
-     * @throws \Exception
+     * Lists all Post models.
+     * @return mixed
      */
     public function actionIndex()
     {
-        \Yii::$container->set('yii\widgets\LinkPager', [
-            'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
-            'firstPageCssClass' => '',
-            'firstPageLabel' => 'Первая',
-            'lastPageLabel' => 'Последняя',
-            'nextPageLabel' => 'Следующая',
-            'prevPageLabel' => 'Предыдущая',
-            'activePageCssClass' => 'current',
-            'maxButtonCount' => 3,
-        ]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => Post::find(),
-        ]);
-        $gridView = GridView::widget([
-            'dataProvider' => $dataProvider,
-            'tableOptions' => [
-                'class' => ''
-            ],
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                'id',
-                'title',
-                [
-                    'attribute' => 'created_at',
-                    'label' => 'Создано',
-                    'format' => 'datetime', // Доступные модификаторы - date:datetime:time
-                    //'headerOptions' => ['width' => '200'],
-                ],
-                [
-                    'attribute' => 'updated_at',
-                    'label' => 'Обновлено',
-                    'format' => 'datetime', // Доступные модификаторы - date:datetime:time
-                    //'headerOptions' => ['width' => '200'],
-                ],
-                [
-                    'attribute' => 'status',
-                    'label' => 'Статус',
-                    'content' => function ($model, $key, $index, $column) {
-                        if ($model->status === 1) {
-                            return 'Опубликован';
-                        } else {
-                            return 'Черновик';
-                        }
-                    }
-                ],
-
-                //'anons:html',
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'header' => 'Действия',
-                    'headerOptions' => ['width' => '80'],
-                    'template' => '{update} {delete} {view}',
-                    'buttons' => [
-                        'update' => function ($url, $model, $key) {
-                            $options = array_merge([
-                                'title' => 'Update',
-                                'aria-label' => 'Update',
-                                'data-pjax' => '0',
-                                'class' => 'button button-primary button-small',
-                            ]);
-                            return \yii\helpers\Html::a('update', $url, $options);
-                        },
-                        'delete' => function ($url, $model, $key) {
-                            $options = array_merge([
-                                'title' => 'Delete',
-                                'aria-label' => 'Delete',
-                                'data-confirm' => 'Are you sure you want to delete this item?',
-                                'data-method' => 'post',
-                                'data-pjax' => '0',
-                                'class' => 'button button-primary button-small',
-                            ]);
-                            return \yii\helpers\Html::a('delete', $url, $options);
-                        },
-                        'view' => function ($url, $model, $key) {
-                            $options = array_merge([
-                                'title' => 'View',
-                                'aria-label' => 'View',
-                                'data-method' => 'post',
-                                'data-pjax' => '0',
-                                'class' => 'button button-primary button-small',
-                                'target' => "_blank",
-                            ]);
-                            $u = Url::to(['/index/default/view', 'slug' => $model->slug]);
-                            return \yii\helpers\Html::a('view', $u, $options);
-                        },
-                    ],
-                ],
-            ],
-        ]);
+        $searchModel = new PostSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $this->view->title = 'Все посты';
         return $this->render('index', [
-            'gridView' => $gridView,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * @return string|\yii\web\Response
+     * Creates a new Post model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
      */
     public function actionCreate()
     {
         $model = new Post();
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $msg = "Запись № {$model->id} {$model->title} успешно создана";
             \Yii::$app->session->setFlash('success', $msg);
-            return $this->redirect(['/'.$model->slug]);
+            return $this->redirect(['/' . $model->slug]);
         } else {
-            //$model->author_id = \Yii::$app->user->id;
+            $this->view->title = 'Создать пост';
             return $this->render('create', [
                 'model' => $model,
-                //'category' => Category::find()->all(),
-                //'tags' => Tags::find()->all(),
-                //'authors' => User::find()->all()
             ]);
         }
     }
 
     /**
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
+     * Updates an existing Post model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
      */
     public function actionUpdate($id)
     {
-        $model = Post::findOne($id);
-        if ($model == null) {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        $model = $this->findModel($id);
 
-        //$model->save()
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $msg = "Запись № {$model->id} {$model->title} успешно обновлена";
             \Yii::$app->session->setFlash('info', $msg);
-            return $this->redirect(['/'.$model->slug]);
+            return $this->redirect(['/' . $model->slug]);
         } else {
-            //$model->author_id = \Yii::$app->user->id;
+            $this->view->title = 'Обновить пост';
             return $this->render('update', [
                 'model' => $model,
-                //'category' => Category::find()->all(),
-                //'tags' => Tags::find()->all(),
-                //'authors' => User::find()->all()
             ]);
         }
     }
 
     /**
-     * @param $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException
+     * Deletes an existing Post model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
      */
     public function actionDelete($id)
     {
-        $model = Post::findOne($id);
-        if ($model == null) {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        } else {
-            $model->delete();
-        }
+        $this->findModel($id)->delete();
+        $msg = "Запись удалена";
+        \Yii::$app->session->setFlash('info', $msg);
         return $this->redirect(['post/index']);
+    }
+
+    /**
+     * Finds the Post model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Post the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Post::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }
