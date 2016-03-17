@@ -36,4 +36,5 @@ phpunit.phar
 /apps
 /extensions
 /config/web.php
+/config/console.php
 /scripts
