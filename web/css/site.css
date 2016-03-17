@@ -52,15 +52,6 @@ pre{
     word-wrap: break-word;
     overflow: auto;
 }
-.one {
-    background-color: #2aabd2;
-    border: 1px black solid;
-
-}
-
-.mycol {
-    border: 1px black solid;
-}
 
 
 nav[role="navigation"] {
