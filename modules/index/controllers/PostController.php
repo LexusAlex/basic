@@ -2,6 +2,7 @@
 
 namespace app\modules\index\controllers;
 
+use app\modules\index\models\Category;
 use Yii;
 use app\modules\index\models\Post;
 use app\modules\index\models\PostSearch;
@@ -77,8 +78,10 @@ class PostController extends Controller
             return $this->redirect(['/' . $model->slug]);
         } else {
             $this->view->title = 'Создать пост';
+            $cat = new Category();
             return $this->render('create', [
                 'model' => $model,
+                'category' => $cat->getAllCategories(),
             ]);
         }
     }
@@ -99,8 +102,10 @@ class PostController extends Controller
             return $this->redirect(['/' . $model->slug]);
         } else {
             $this->view->title = 'Обновить пост';
+            $cat = new Category();
             return $this->render('update', [
                 'model' => $model,
+                'category' => $cat->getAllCategories(),
             ]);
         }
     }

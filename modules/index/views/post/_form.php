@@ -31,10 +31,13 @@ use mihaildev\elfinder\ElFinder;
         [\app\modules\index\models\Post::STATUS_DRAFT => 'Черновик',
             \app\modules\index\models\Post::STATUS_PUBLISH => 'Опубликован',
             \app\modules\index\models\Post::STATUS_PRIVATE => 'Закрытый'],
-        ['prompt' => 'Выбрать']
+        ['prompt' => 'Выбрать тип поста']
     //\yii\helpers\ArrayHelper::map(\app\modules\index\models\Post::find()->all(),'id','title')
     ) ?>
-
+        <?= $form->field($model, 'category_id')->dropDownList(
+            \yii\helpers\ArrayHelper::map($category, 'id', 'title'),
+            ['prompt' => 'Выбрать категорию']
+        ) ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Обновить', ['class' => $model->isNewRecord ? 'button button-primary' : 'button button-primary']) ?>
     </div>

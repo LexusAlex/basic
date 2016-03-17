@@ -2,6 +2,7 @@
 
 namespace app\modules\index\controllers;
 
+use app\modules\index\models\Category;
 use app\modules\index\models\ContactForm;
 use app\modules\index\models\LoginForm;
 use app\modules\index\models\Post;
@@ -163,5 +164,16 @@ class DefaultController extends Controller
         return $this->render('contact', [
             'model' => $model,
         ]);
+    }
+
+    public function actionCategory($id){
+        $c = new Category();
+        $posts = $c->getPostsFromCategory($id);
+        if($posts == null){
+            throw new NotFoundHttpException('The requested post does not exist.');
+        }
+
+        $this->view->title = 'Записи в категории '.$c->getName($id);
+        return $this->render('categories',['posts'=>$posts]);
     }
 }
