@@ -1,14 +1,13 @@
 <?php
 
 use yii\db\Migration;
-
 class m160310_132251_create_default_user extends Migration
 {
     public function up()
     {
         $this->insert('{{user}}', [
-            'username' => 'admin',
-            'password_hash' => \Yii::$app->security->generatePasswordHash('1'),
+            'username' => \Yii::$app->params["user"],
+            'password_hash' => \Yii::$app->security->generatePasswordHash(\Yii::$app->params['password']),
             'password_reset_token' => \Yii::$app->security->generateRandomString() . '_' . time(),
             'email' => 'admin@localhost.local',
             'auth_key' => \Yii::$app->security->generateRandomString(),
@@ -20,6 +19,7 @@ class m160310_132251_create_default_user extends Migration
 
     public function down()
     {
-        $this->delete('{{user}}', 'username = "admin"');
+        $u = \Yii::$app->params['user'];
+        $this->delete('{{user}}', "username = '$u'");
     }
 }
