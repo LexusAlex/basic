@@ -78,6 +78,7 @@ class PostController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $msg = "Запись № {$model->id} {$model->title} успешно создана";
             \Yii::$app->session->setFlash('success', $msg);
+            if($model->status == 2){return $this->redirect(['/index/post/my']);}
             return $this->redirect(['/' . $model->slug]);
         } else {
             $this->view->title = 'Создать пост';
@@ -102,6 +103,7 @@ class PostController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $msg = "Запись № {$model->id} {$model->title} успешно обновлена";
             \Yii::$app->session->setFlash('info', $msg);
+            if($model->status == 2){return $this->redirect(['/index/post/my']);}
             return $this->redirect(['/' . $model->slug]);
         } else {
             $this->view->title = 'Обновить пост';
@@ -141,5 +143,12 @@ class PostController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionMy(){
+        $p = new Post();
+        $privatePosts = $p->conclusionPosts($p::STATUS_PRIVATE);
+        $draftPosts = $p->conclusionPosts($p::STATUS_DRAFT);
+        return $this->render('my',['privatePosts'=>$privatePosts,'draftPosts'=>$draftPosts]);
     }
 }

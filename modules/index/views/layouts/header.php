@@ -18,12 +18,12 @@
 
                     ['label' => 'Администрирование', 'url' => ['post/index'], 'options' => ['class' => 'has-sub'], 'visible' => !\Yii::$app->user->isGuest, 'items' => [
                         ['label' => 'Посты', 'url' => ['post/index'], 'items' => [
-                            ['label' => 'Создать', 'url' => ['post/create']],
+                            ['label' => 'Создать', 'url' => ['post/create'], 'visible' => !\Yii::$app->user->isGuest],
                         ]],
                         ['label' => 'Категории', 'url' => ['category/index'], 'items' => [
-                            ['label' => 'Создать', 'url' => ['category/create']],
+                            ['label' => 'Создать', 'url' => ['category/create'], 'visible' => !\Yii::$app->user->isGuest],
                         ]],
-                        ['label' => 'Мои записи', 'url' => ['default/my'], 'visible' => !\Yii::$app->user->isGuest],
+                        ['label' => 'Мои записи', 'url' => ['post/my'], 'visible' => !\Yii::$app->user->isGuest],
                     ]],
                 ],
                 //'itemOptions' => ['class' => 'has-sub',],
