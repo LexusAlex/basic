@@ -52,6 +52,9 @@ class DefaultController extends Controller
         ];
     }
 
+    /**
+     * @return array
+     */
     public function actions()
     {
         return [
@@ -104,6 +107,7 @@ class DefaultController extends Controller
             'emptyText' => 'Список пуст',
         ]);
         $this->view->title = 'Технические статьи и заметки';
+        $this->view->registerMetaTag(['name' => 'description','content' => 'Статьи ,заметки, советы, собственный опыт о программировании, администрировании, it и не только']);
         return $this->render('index', [
             'listView' => $listView,
         ]);
@@ -120,6 +124,7 @@ class DefaultController extends Controller
         $model = Post::find()->where('slug = :name AND status = 1', [':name' => $slug])->one();
         if ($model !== null) {
             $this->view->title = $model->title;
+            $this->view->registerMetaTag(['name' => 'description','content' => $model->title.' Только уникальные материалы!']);
             return $this->render('view', [
                 'model' => $model,
             ]);
@@ -129,6 +134,9 @@ class DefaultController extends Controller
 
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
@@ -147,15 +155,21 @@ class DefaultController extends Controller
         }
     }
 
+    /**
+     * @return \yii\web\Response
+     */
     public function actionLogout()
     {
         \Yii::$app->user->logout();
         return $this->goHome();
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionContact()
     {
-        $model = new ContactForm();
+        /*$model = new ContactForm();
         if ($model->load(\Yii::$app->request->post()) && $model->contact('a@b.ru')) {
             \Yii::$app->session->setFlash('contactFormSubmitted');
 
@@ -163,17 +177,49 @@ class DefaultController extends Controller
         }
         return $this->render('contact', [
             'model' => $model,
-        ]);
+        ]);*/
+        $this->view->title = 'Написать автору';
+        $this->view->registerMetaTag(['name' => 'description','content' =>'Обратная связь с автором статей.']);
+        return $this->render('contact');
+
     }
 
-    public function actionCategory($id){
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionCategory($id)
+    {
         $c = new Category();
         $posts = $c->getPostsFromCategory($id);
-        if($posts == null){
+        if ($posts == null) {
             throw new NotFoundHttpException('The requested post does not exist.');
         }
 
-        $this->view->title = 'Записи в категории '.$c->getName($id);
-        return $this->render('categories',['posts'=>$posts]);
+        $this->view->title = 'Записи в категории ' . $c->getName($id);
+        $this->view->registerMetaTag(['name' => 'description','content' => 'Записи в категории '. $c->getName($id)]);
+        $this->view->registerMetaTag(['name' => 'keywords','content' => $c->getName($id)]);
+        return $this->render('categories', ['posts' => $posts]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionBooks()
+    {
+        $this->view->title = 'Книги';
+        $this->view->registerMetaTag(['name' => 'description','content' => 'Нужные полезные книги.']);
+        return $this->render('books');
+    }
+
+    /**
+     * @return string
+     */
+    public function actionAbout()
+    {
+        $this->view->title = 'О проекте';
+        $this->view->registerMetaTag(['name' => 'description','content' => 'О проекте sporthock.ru']);
+        return $this->render('about');
     }
 }

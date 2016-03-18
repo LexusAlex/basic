@@ -4,6 +4,7 @@ namespace app\modules\main\controllers;
 
 
 use app\modules\main\models\ContactForm;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
@@ -12,6 +13,24 @@ use yii\web\View;
 
 class DefaultController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['logout','index'],
+                'rules' => [
+                    [
+                        'allow' => true, // Могут выполнять
+                        'roles' => ['@'], // Только авторизованные пользователи
+                    ],
+                    [
+                        'allow' => false,
+                    ]
+                ],
+            ],
+        ];
+    }
     public function actions()
     {
         return [

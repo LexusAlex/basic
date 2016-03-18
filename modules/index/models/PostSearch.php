@@ -40,7 +40,7 @@ class PostSearch extends Post
      */
     public function search($params)
     {
-        $query = Post::find();
+        $query = Post::find()->orderBy('id DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -64,8 +64,8 @@ class PostSearch extends Post
 
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'anons', $this->anons]);
-            //->andFilterWhere(['like', 'content', $this->content]);
-            //->andFilterWhere(['like', 'slug', $this->slug]);
+        //->andFilterWhere(['like', 'content', $this->content]);
+        //->andFilterWhere(['like', 'slug', $this->slug]);
 
         return $dataProvider;
     }

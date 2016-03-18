@@ -47,9 +47,9 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * $c = Category::findOne([1]);
-       $r = $c->getPosts()->where(['id'=>3])->all();
-       $c->posts;
-       $r
+     * $r = $c->getPosts()->where(['id'=>3])->all();
+     * $c->posts;
+     * $r
      * @return \yii\db\ActiveQuery
      */
     public function getPosts()
@@ -60,21 +60,34 @@ class Category extends \yii\db\ActiveRecord
     /**
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getAllCategories(){
-        return $this->find()->select(['id','title'])->orderBy('title')->all();
+    public function getAllCategories()
+    {
+        return $this->find()->select(['id', 'title'])->orderBy('title')->all();
     }
 
+    /**
+     * @param $id
+     * @return Post[]|null
+     */
     public function getPostsFromCategory($id)
     {
-        if ($this->find()->where(['id'=>$id])->one() === null) {
+        if ($this->find()->where(['id' => $id])->one() === null) {
             return null;
         } else {
             return $this->findOne([$id])->posts;
         }
     }
-    public function getName($id){
-        $record = $this->find()->where(['id'=>$id])->one();
-        return $record->title;
+
+    /**
+     * @param $id
+     * @return mixed|null
+     */
+    public function getName($id)
+    {
+        if ($this->find()->where(['id' => $id])->one() === null) {
+            return null;
+        }
+        return $this->find()->where(['id' => $id])->one()->title;
     }
 
 }
