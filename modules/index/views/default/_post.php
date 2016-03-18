@@ -13,7 +13,13 @@
                 </h2>
             </div>
             <div class="span-3 span-10-sm span-10-md text-center-md">
-                <h5><?php echo Yii::$app->formatter->asDate($model->created_at === $model->updated_at ? $model->created_at : $model->updated_at, 'medium'); ?></h5>
+                <h5><?php echo Yii::$app->formatter->asDate($model->created_at, 'medium'); ?></h5>
+                <?php /*if($model->updated_at > $model->created_at){echo 'обновлено '.Yii::$app->formatter->asDate($model->updated_at, 'medium');}*/?>
+            </div>
+        </div>
+        <div class="grid no-pad text-left">
+            <div class="span-6">
+                <?php if($model->category !== null){echo '<h6><em>'.$model->category->title.'</em></h6>';}?>
             </div>
         </div>
         <div class="grid no-pad">
