@@ -74,7 +74,7 @@ class Post extends ActiveRecord
         return [
             [['title', 'anons', 'content', 'status'], 'required'],
             [['anons', 'content', 'slug'], 'string'],
-            [['status'], 'integer'],
+            [['status','category_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
             ['title', 'duplicateTitle'],
