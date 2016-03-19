@@ -4,22 +4,17 @@
  * @var $model app\modules\index\models\Post
  */
 ?>
-<div class="grid justify-center">
+<div class="grid no-pad">
     <div class="span-12">
-        <div class="grid justify-space-around">
-            <div class="span-9 span-10-sm span-10-md text-center-md">
-                <h2>
-                    <a href="<?php echo \yii\helpers\Url::to(['view', 'slug' => $model->slug]); ?>"><?php echo $model->title; ?></a>
-                </h2>
+        <h2 class="text-left text-center-md">
+            <a href="<?php echo \yii\helpers\Url::to(['view', 'slug' => $model->slug]); ?>"><?php echo $model->title; ?></a>
+        </h2>
+        <div class="grid no-pad">
+            <div class="span-6 text-left">
+                <h6><em><?php echo Yii::$app->formatter->asDate($model->created_at, 'medium'); ?></em></h6>
             </div>
-            <div class="span-3 span-10-sm span-10-md text-center-md">
-                <h5><?php echo Yii::$app->formatter->asDate($model->created_at, 'medium'); ?></h5>
-                <?php /*if($model->updated_at > $model->created_at){echo 'обновлено '.Yii::$app->formatter->asDate($model->updated_at, 'medium');}*/?>
-            </div>
-        </div>
-        <div class="grid no-pad text-left">
-            <div class="span-6">
-                <?php if($model->category !== null){echo '<h6><em>'.$model->category->title.'</em></h6>';}?>
+            <div class="span-6 text-right">
+                <h6><em><?php if($model->category !== null){echo $model->category->title;} ?></em></h6>
             </div>
         </div>
         <div class="grid no-pad">

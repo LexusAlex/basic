@@ -9,7 +9,7 @@
 <?php echo $this->renderFile('@app/modules/index/views/layouts/header.php'); ?>
 
     <div class="grid justify-space-around">
-        <div class="span-8 span-9-xl span-8-lg span-12-md span-12-sm span-12-xs">
+        <div class="span-8 span-8-xl span-8-lg span-12-md span-12-sm span-12-xs">
             <?= \app\widgets\Alert::widget() ?>
             <?php echo $content; ?>
         </div>

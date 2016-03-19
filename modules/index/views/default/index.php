@@ -6,7 +6,7 @@
  */
 use \yii\helpers\Html;
 ?>
-    <h1><?php echo Html::encode($this->title); ?></h1>
+    <h1 class="text-center"><?php echo Html::encode($this->title); ?></h1>
 <?
 echo $listView;
 ?>

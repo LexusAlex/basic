@@ -7,10 +7,9 @@ use \yii\helpers\Html;
 
 ?>
 
-<div class="grid justify-center">
+<div class="grid justify-center no-pad">
     <div class="span-12 text-center-md">
-        <h1><?php echo Html::encode($this->title); ?></h1>
-        <hr>
+        <h1 class="text-center"><?php echo Html::encode($this->title); ?></h1>
     </div>
     <div class="span-12">
         <?php echo $model->anons; ?>
