@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f143e015fd5e9225773c6c2316e7b522",
-    "content-hash": "dffef2f206ac4932b4162d160d79b0c0",
+    "hash": "149178795d7505c18acac9bde4767bce",
+    "content-hash": "6f2dfe3a5cf480eb9c792268facc4591",
     "packages": [
         {
             "name": "2amigos/yii2-disqus-widget",
@@ -62,91 +62,6 @@
                 "yii2"
             ],
             "time": "2015-03-19 11:20:02"
-        },
-        {
-            "name": "bower-asset/bootstrap",
-            "version": "v3.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/16b48259a62f576e52c903c476bd42b90ab22482",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/jquery": ">=1.9.1"
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": [
-                    "less/bootstrap.less",
-                    "dist/js/bootstrap.js"
-                ],
-                "bower-asset-ignore": [
-                    "/.*",
-                    "_config.yml",
-                    "CNAME",
-                    "composer.json",
-                    "CONTRIBUTING.md",
-                    "docs",
-                    "js/tests",
-                    "test-infra"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "keywords": [
-                "css",
-                "framework",
-                "front-end",
-                "js",
-                "less",
-                "mobile-first",
-                "responsive",
-                "web"
-            ]
-        },
-        {
-            "name": "bower-asset/flexnav",
-            "version": "v1.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/indyplanets/flexnav.git",
-                "reference": "39f5468675582d3b64ce0303bac20b26587c0a1b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/indyplanets/flexnav/zipball/39f5468675582d3b64ce0303bac20b26587c0a1b",
-                "reference": "39f5468675582d3b64ce0303bac20b26587c0a1b",
-                "shasum": ""
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-ignore": [
-                    "**/.*",
-                    "node_modules",
-                    "bower_components",
-                    "test",
-                    "tests"
-                ]
-            },
-            "license": [
-                "Unlicense"
-            ],
-            "description": "A jQuery plugin for responsive menus",
-            "keywords": [
-                "flexnav",
-                "jquery",
-                "menus",
-                "plugin",
-                "responsive navigation"
-            ]
         },
         {
             "name": "bower-asset/jquery",
@@ -251,6 +166,49 @@
             ]
         },
         {
+            "name": "bower-asset/mmenu",
+            "version": "v5.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FrDH/jQuery.mmenu.git",
+                "reference": "e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FrDH/jQuery.mmenu/zipball/e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966",
+                "reference": "e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7.0"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "dist/js/jquery.mmenu.all.min.umd.js",
+                    "dist/css/jquery.mmenu.all.css"
+                ]
+            },
+            "license": [
+                "CC-BY-NC-4.0"
+            ],
+            "description": "The best jQuery plugin for app look-alike on- and off-canvas menus with sliding submenus for your website and webapp.",
+            "keywords": [
+                "app",
+                "list",
+                "listview",
+                "megamenu",
+                "menu",
+                "mmenu",
+                "mobile",
+                "navigation",
+                "off-canvas",
+                "on-canvas",
+                "panels",
+                "submenu"
+            ]
+        },
+        {
             "name": "bower-asset/punycode",
             "version": "v1.3.2",
             "source": {
@@ -279,32 +237,43 @@
             }
         },
         {
-            "name": "bower-asset/skeleton-css",
-            "version": "2.0.4",
+            "name": "bower-asset/superfish",
+            "version": "v1.7.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dhg/Skeleton.git",
-                "reference": "88f03612b05f093e3f235ced77cf89d3a8fcf846"
+                "url": "https://github.com/joeldbirch/superfish.git",
+                "reference": "34ee8b1d3ede2f441ab7e7556d924b3a2d359b1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dhg/Skeleton/zipball/88f03612b05f093e3f235ced77cf89d3a8fcf846",
-                "reference": "88f03612b05f093e3f235ced77cf89d3a8fcf846",
+                "url": "https://api.github.com/repos/joeldbirch/superfish/zipball/34ee8b1d3ede2f441ab7e7556d924b3a2d359b1a",
+                "reference": "34ee8b1d3ede2f441ab7e7556d924b3a2d359b1a",
                 "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.8"
             },
             "type": "bower-asset-library",
             "extra": {
-                "bower-asset-main": "css/skeleton.css"
+                "bower-asset-main": [
+                    "dist/js/superfish.js",
+                    "dist/js/hoverIntent.js",
+                    "dist/css/superfish.css"
+                ],
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "*.json",
+                    "Gruntfile.coffee",
+                    "changelog.txt",
+                    "node_modules",
+                    "components",
+                    "README.md",
+                    "test",
+                    "src"
+                ]
             },
             "license": [
                 "MIT"
-            ],
-            "description": "Skeleton is a dead-simple, responsive boilerplate to kickstart any responsive project.",
-            "keywords": [
-                "boilerplate",
-                "css",
-                "responsive",
-                "skeleton"
             ]
         },
         {
@@ -774,56 +743,6 @@
             "time": "2016-02-14 14:45:55"
         },
         {
-            "name": "yiisoft/yii2-bootstrap",
-            "version": "2.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii2-bootstrap.git",
-                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
-                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/bootstrap": "3.3.* | 3.2.* | 3.1.*",
-                "yiisoft/yii2": ">=2.0.6"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                },
-                "asset-installer-paths": {
-                    "npm-asset-library": "vendor/npm",
-                    "bower-asset-library": "vendor/bower"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii\\bootstrap\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Qiang Xue",
-                    "email": "qiang.xue@gmail.com"
-                }
-            ],
-            "description": "The Twitter Bootstrap extension for the Yii framework",
-            "keywords": [
-                "bootstrap",
-                "yii2"
-            ],
-            "time": "2016-03-17 03:29:28"
-        },
-        {
             "name": "yiisoft/yii2-composer",
             "version": "2.0.4",
             "source": {
@@ -1064,6 +983,55 @@
     ],
     "packages-dev": [
         {
+            "name": "bower-asset/bootstrap",
+            "version": "v3.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "16b48259a62f576e52c903c476bd42b90ab22482"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/16b48259a62f576e52c903c476bd42b90ab22482",
+                "reference": "16b48259a62f576e52c903c476bd42b90ab22482",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.9.1"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "less/bootstrap.less",
+                    "dist/js/bootstrap.js"
+                ],
+                "bower-asset-ignore": [
+                    "/.*",
+                    "_config.yml",
+                    "CNAME",
+                    "composer.json",
+                    "CONTRIBUTING.md",
+                    "docs",
+                    "js/tests",
+                    "test-infra"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+            "keywords": [
+                "css",
+                "framework",
+                "front-end",
+                "js",
+                "less",
+                "mobile-first",
+                "responsive",
+                "web"
+            ]
+        },
+        {
             "name": "bower-asset/typeahead.js",
             "version": "v0.11.1",
             "source": {
@@ -1175,6 +1143,56 @@
             ],
             "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
             "time": "2013-11-01 13:02:21"
+        },
+        {
+            "name": "yiisoft/yii2-bootstrap",
+            "version": "2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-bootstrap.git",
+                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
+                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap": "3.3.* | 3.2.* | 3.1.*",
+                "yiisoft/yii2": ">=2.0.6"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                },
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\bootstrap\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Twitter Bootstrap extension for the Yii framework",
+            "keywords": [
+                "bootstrap",
+                "yii2"
+            ],
+            "time": "2016-03-17 03:29:28"
         },
         {
             "name": "yiisoft/yii2-codeception",

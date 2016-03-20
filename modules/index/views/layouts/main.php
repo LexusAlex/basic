@@ -8,14 +8,14 @@
 
 <?php echo $this->renderFile('@app/modules/index/views/layouts/header.php'); ?>
 
-    <div class="grid justify-space-around">
-        <div class="span-8 span-8-xl span-8-lg span-12-md span-12-sm span-12-xs">
+    <div class="grid justify-center">
+        <div class="span-8 span-10-md span-12-sm span-12-xs">
             <?= \app\widgets\Alert::widget() ?>
             <?php echo $content; ?>
         </div>
-        <?php if ($this->context->id === 'default') {
+        <?php /*if ($this->context->id === 'default') {
             echo $this->render('rightcolumn');
-        }
+        }*/
         ?>
     </div>
 

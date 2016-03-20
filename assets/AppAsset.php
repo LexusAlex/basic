@@ -14,26 +14,16 @@ class AppAsset extends AssetBundle
     //public $baseUrl = '@web';
     public $sourcePath = '@app/web';
     public $css = [
-        //'css/kube.css',
         'css/site.css',
-        'css/typography.css',
-        'css/flex.css',
-        'css/buttons.css',
-        //'css/buttonslite.css',
-        'css/tables.css',
-        'css/forms.css',
-        'css/lists.css',
-        'css/alert.css',
-        'css/nav.css'
+        'css/gridflex.css',
     ];
     public $js = [
-        'js/menu.js'
+      'js/common.js'
     ];
     public $depends = [
+        'app\assets\SuperFishAsset',
         'app\assets\NormalizeAsset',
-        //'app\assets\FlexAsset',
         'yii\web\YiiAsset',
-        //'app\assets\NavAsset',
-        //'yii\bootstrap\BootstrapAsset',
+
     ];
 }

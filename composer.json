@@ -21,16 +21,15 @@
   "require": {
     "php": ">=5.4.0",
     "yiisoft/yii2": "2.0.*",
-    "yiisoft/yii2-bootstrap": "*",
     "yiisoft/yii2-swiftmailer": "*",
     "components/normalize.css": "3.0.*",
-    "bower-asset/skeleton-css": "*",
-    "bower-asset/flexnav": "*",
     "zelenin/yii2-slug-behavior": "*",
     "mihaildev/yii2-ckeditor": "*",
     "mihaildev/yii2-elfinder": "*",
     "nezhelskoy/yii2-highlight": "*",
-    "2amigos/yii2-disqus-widget" : "~1.0"
+    "2amigos/yii2-disqus-widget" : "~1.0",
+    "bower-asset/superfish" : "*",
+    "bower-asset/mmenu" : "*"
   },
   "require-dev": {
     "yiisoft/yii2-codeception": "*",
