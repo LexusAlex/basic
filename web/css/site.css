@@ -122,15 +122,16 @@ a:hover{
 .top-line ul{
     list-style-type: none;
     padding: 0;
-   /* margin: 0;*/
+    /*margin: 0;*/
+    margin: 0 auto -5px;
+
 }
 /* ul */
 .sf-menu{
-    margin: 0 auto -6px;
     float: none;
     display: inline-block;
     font-family: "RobotoMedium", sans-serif;
-    font-size: 0.9em;
+    font-size: 1.1em;
 }
 .sf-menu > li{
     display: inline-block;

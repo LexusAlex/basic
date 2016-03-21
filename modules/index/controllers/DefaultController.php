@@ -124,7 +124,7 @@ class DefaultController extends Controller
         $model = Post::find()->where('slug = :name AND status = 1', [':name' => $slug])->one();
         if ($model !== null) {
             $this->view->title = $model->title;
-            $this->view->registerMetaTag(['name' => 'description','content' => $model->title.' Только уникальные материалы!']);
+            $this->view->registerMetaTag(['name' => 'description','content' => $model->title]);
             return $this->render('view', [
                 'model' => $model,
             ]);
