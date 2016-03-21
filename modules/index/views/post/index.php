@@ -13,7 +13,7 @@ use yii\grid\GridView;
 <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 <?
 \Yii::$container->set('yii\widgets\LinkPager', [
-    'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
+    'options' => ['class' => 'paginator'],
     'firstPageCssClass' => '',
     'firstPageLabel' => 'Первая',
     'lastPageLabel' => 'Последняя',

@@ -18,7 +18,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Category', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+    <?
+    \Yii::$container->set('yii\widgets\LinkPager', [
+        'options' => ['class' => 'paginator'],
+        'firstPageCssClass' => '',
+        'firstPageLabel' => 'Первая',
+        'lastPageLabel' => 'Последняя',
+        'nextPageLabel' => 'Следующая',
+        'prevPageLabel' => 'Предыдущая',
+        'activePageCssClass' => 'current',
+        'maxButtonCount' => 3,
+    ]);
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

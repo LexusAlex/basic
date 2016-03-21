@@ -3,6 +3,7 @@
  * @var $this \yii\web\View
  */
 ?>
+<div class="preloader" style="display: none;"></div>
 <div class="mobile-menu show-block-xs show-block-sm hide">
     <a href="#" class="toggle-menu"><span></span></a>
     <b>Меню</b>

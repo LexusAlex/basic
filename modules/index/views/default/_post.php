@@ -6,27 +6,22 @@
 ?>
 <div class="grid no-pad">
     <div class="span-12">
-        <h2 class="text-left text-center-md">
+        <h2 class="text-center">
             <a href="<?php echo \yii\helpers\Url::to(['view', 'slug' => $model->slug]); ?>"><?php echo $model->title; ?></a>
         </h2>
-        <div class="grid no-pad">
-            <div class="span-6 text-left">
-                <h6><em><?php echo Yii::$app->formatter->asDate($model->created_at, 'medium'); ?></em></h6>
-            </div>
-            <div class="span-6 text-right">
-                <h6><em><?php if($model->category !== null){echo $model->category->title;} ?></em></h6>
-            </div>
+        <div class="date text-center">
+            <?php echo Yii::$app->formatter->asDate($model->created_at, 'full'); ?>
         </div>
-        <div class="grid no-pad">
-            <div class="span-12">
-                <?php echo $model->anons; ?>
-                <a class="button button-primary"
-                   href="<?php echo \yii\helpers\Url::to(['view', 'slug' => $model->slug]); ?>">
-                    Читать далее
-                </a>
-            </div>
+        <?php echo $model->anons; ?>
+        <div>
+            <?php if($model->category !== null){echo $model->category->title;} ?>
         </div>
+        <br>
+        <a class=""
+           href="<?php echo \yii\helpers\Url::to(['view', 'slug' => $model->slug]); ?>">
+            Читать далее
+        </a>
     </div>
 </div>
 
-<hr>
+<div class="border"></div>

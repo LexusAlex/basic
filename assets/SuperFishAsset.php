@@ -23,4 +23,8 @@ class SuperFishAsset extends AssetBundle
     public $js = [
         'js/superfish.min.js',
     ];
+    public $depends = [
+        'app\assets\MmenuAsset',
+
+    ];
 }

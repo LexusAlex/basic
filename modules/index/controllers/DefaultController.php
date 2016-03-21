@@ -78,7 +78,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         \Yii::$container->set('yii\widgets\LinkPager', [
-            'options' => ['class' => 'cd-pagination no-space move-buttons custom-icons'],
+            'options' => ['class' => 'paginator'],
             'firstPageCssClass' => '',
             'firstPageLabel' => 'Первая',
             'lastPageLabel' => 'Последняя',

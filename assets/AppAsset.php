@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
       'js/common.js'
     ];
     public $depends = [
+        'app\assets\PopupAsset',
         'app\assets\SuperFishAsset',
         'app\assets\NormalizeAsset',
         'yii\web\YiiAsset',

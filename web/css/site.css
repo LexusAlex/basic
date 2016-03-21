@@ -96,25 +96,37 @@ b , strong{
     font-weight: normal;
 }
 h1,h2,h3,h4,h5,h6{
-    font-family: "RobotoCondensedBold", sans-serif;
+    font-family: "RobotoMedium", sans-serif;
     font-weight: 400;
+    color: #22133e;
+}
+h2{
+    font-family: "RobotoLight", sans-serif;
+    text-transform: uppercase;
+}
+a{
+    color: #22133e;
+    text-decoration: none;
+    transition: background 0.3s linear 0s, color 0.3s linear 0s;
+}
+a:hover{
+    color: #757575;
 }
 .top-line{
-    background-color: #337ab7;
     background-color: #22133e;
     text-align: center;
 }
 .top-line a{
     color: #fff;
 }
-.top-line ul,li{
+.top-line ul{
     list-style-type: none;
     padding: 0;
-    margin: 0;
+   /* margin: 0;*/
 }
 /* ul */
 .sf-menu{
-    margin: 0;
+    margin: 0 auto -6px;
     float: none;
     display: inline-block;
     font-family: "RobotoMedium", sans-serif;
@@ -140,9 +152,6 @@ h1,h2,h3,h4,h5,h6{
 }
 .sf-menu > li a:hover{
 
-}
-.sf-menu >li > ul{
-    padding-top: 6px;
 }
 .sf-menu > li ul li{
     background-color: #22133e;
@@ -199,6 +208,214 @@ h1,h2,h3,h4,h5,h6{
 }
 .toggle-menu.on span:after {
     transform: rotate(-45deg) translate(6px, -7px);
+}
+
+.preloader {
+    background-image: url("img/preloader.gif");
+}
+.preloader {
+    background-color: #fff;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+.footer{
+    background-color: #1c0f32;
+
+}
+.footer h4{
+    color: #fff;
+}
+.footer h4 a{
+    color: #fff;
+}
+.footer h3{
+    color: #fff;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+th:first-child,
+td:first-child {
+    padding-left: 0;
+}
+
+th:last-child,
+td:last-child {
+    padding-right: 0;
+}
+
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+    height: 38px;
+    padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+    background-color: #fff;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+    box-shadow: none;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+textarea {
+    min-height: 65px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    border: 1px solid #33C3F0;
+    outline: 0;
+}
+
+label,
+legend {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+}
+
+fieldset {
+    padding: 0;
+    border-width: 0;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    display: inline;
+}
+
+label > .label-body {
+    display: inline-block;
+    margin-left: .5rem;
+    font-weight: normal;
+}
+
+
+.alert {
+    display: block;
+    width: calc(100% - 30px);
+    font-weight: 300;
+    font-size: 16px;
+    text-align: left;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #E1F5FE;
+    color: #03A9F4;
+    border-color: #03A9F4;
+}
+
+.alert a {
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.alert-error {
+    color: #D32F2F;
+    background-color: #FFEBEE;
+    border-color: #F44336;
+}
+
+.alert-warning {
+    background-color: #FFF8E1;
+    color: #FF8F00;
+    border-color: #FFC107;
+}
+
+.alert-done {
+    background-color: #E8F5E9;
+    color: #388E3C;
+    border-color: #4CAF50;
+}
+
+.date{
+    font-family: "RobotoCondensedRegular", sans-serif;
+}
+.border{
+    border: 1px solid #c6c6c6;
+}
+img {
+    width: 100%; /* ширина картинки */
+    height: auto; /* высота картинки */
+}
+.page-item h1{
+    font-family: "RobotoLight", sans-serif;
+    font-size: 3rem;
+    font-weight: 100;
+    line-height: 1.25;
+}
+.page-item .content{
+    font-family: "RobotoRegular", sans-serif;
+}
+
+.paginator{
+    margin: 20px 0;
+    padding: 0;
+    text-align: center;
+}
+.paginator li{
+    display: inline-block;
+    font-size: 16px;
+    margin: 0;
+    padding: 0 2px;
+}
+.paginator li a{
+    padding: 6px 12px;
+    margin: 0;
+}
+.paginator li a:hover{
+    background-color: #22133e;
+    color: yellow;
+}
+.paginator li.current a{
+    color: #fff;
+    background-color: #22133e;
 }
 .block {
     display: block;

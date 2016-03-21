@@ -11,9 +11,9 @@ $this->title = $name;
 ?>
 <div>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
 
     <div class="alert alert-error block-center">
-        <h2> <?= nl2br(Html::encode($message)) ?></h2>
+        <h2 class="text-center"><?= nl2br(Html::encode($message)) ?></h2>
     </div>
 </div>
