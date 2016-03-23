@@ -10,4 +10,13 @@ use \yii\helpers\Html;
 <?
 echo $listView;
 ?>
+<div class="grid">
+    <div class="span-6 text-center">
+        <h1>Категории</h1>
+        <div class="category">
+            <?php echo \app\widgets\Categories::widget(); ?>
+        </div>
+    </div>
+    <div class="span-6"></div>
+</div>
 
