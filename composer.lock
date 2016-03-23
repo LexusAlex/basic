@@ -579,16 +579,16 @@
         },
         {
             "name": "nezhelskoy/yii2-highlight",
-            "version": "v1.2.4",
+            "version": "v1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nezhelskoy/yii2-highlight.git",
-                "reference": "5633285d65fd82c3fe47eaf23ddf5e2624de9259"
+                "reference": "6704dabc5699ae86eb34ca94bcc4517691546a84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nezhelskoy/yii2-highlight/zipball/5633285d65fd82c3fe47eaf23ddf5e2624de9259",
-                "reference": "5633285d65fd82c3fe47eaf23ddf5e2624de9259",
+                "url": "https://api.github.com/repos/nezhelskoy/yii2-highlight/zipball/6704dabc5699ae86eb34ca94bcc4517691546a84",
+                "reference": "6704dabc5699ae86eb34ca94bcc4517691546a84",
                 "shasum": ""
             },
             "require": {
@@ -624,7 +624,7 @@
                 "highlight.js",
                 "yii2"
             ],
-            "time": "2016-01-05 13:04:41"
+            "time": "2016-03-21 16:41:49"
         },
         {
             "name": "swiftmailer/swiftmailer",

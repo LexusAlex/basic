@@ -102,12 +102,13 @@ h1,h2,h3,h4,h5,h6{
 }
 h2{
     font-family: "RobotoLight", sans-serif;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 a{
     color: #22133e;
     text-decoration: none;
     transition: background 0.3s linear 0s, color 0.3s linear 0s;
+    outline: none;
 }
 a:hover{
     color: #757575;
@@ -224,6 +225,9 @@ a:hover{
     top: 0;
     width: 100%;
     z-index: 999;
+}
+pre{
+    white-space: pre-wrap;
 }
 .footer{
     background-color: #1c0f32;
@@ -417,6 +421,9 @@ img {
 .paginator li.current a{
     color: #fff;
     background-color: #22133e;
+}
+.category{
+    font-family: "RobotoCondensedRegular", sans-serif;
 }
 .block {
     display: block;
