@@ -398,6 +398,9 @@ img {
 .page-item .content{
     font-family: "RobotoRegular", sans-serif;
 }
+.page-item a{
+    text-decoration: underline;
+}
 
 .paginator{
     margin: 20px 0;
@@ -708,4 +711,18 @@ img {
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1200px) {
 
+}
+
+#toTop {
+    position:fixed;
+    z-index:9999;
+    bottom:10px;
+    right:10px;
+    background: #22133e;
+    border: 1px solid #ccc;
+    padding: 5px;
+    cursor: pointer;
+    color: #fc0;
+    text-decoration: none;
+    width:100px;
 }

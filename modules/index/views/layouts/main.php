@@ -18,7 +18,7 @@
         }*/
         ?>
     </div>
-
+    <button id="toTop">Наверх</button>
 <?php echo $this->renderFile('@app/modules/index/views/layouts/footer.php'); ?>
 
 <?php $this->endContent(); ?>
