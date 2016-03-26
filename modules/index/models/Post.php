@@ -159,7 +159,7 @@ class Post extends ActiveRecord
         if (!$id) {
             return null;
         }
-        return $this::find()->select(['id', 'slug', 'title', 'created_at', 'anons', 'status', 'category_id'])->where('id =' . $id->id)->one();
+        return $this::find()->select(['id', 'slug', 'title', 'created_at', 'anons', 'status', 'category_id','content'])->where('id =' . $id->id)->one();
     }
 
     /**
