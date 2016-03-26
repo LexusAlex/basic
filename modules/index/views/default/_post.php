@@ -4,6 +4,15 @@
  * @var $model app\modules\index\models\Post
  */
 ?>
+<?php
+/**
+ * $model->slug
+ * $model->title
+ * $model->created_at
+ * $model->anons
+ * $model->category->title
+ */
+?>
 <div class="grid no-pad">
     <div class="span-12">
         <h2 class="text-center">
@@ -14,7 +23,7 @@
         </div>
         <?php echo $model->anons; ?>
         <div>
-            <?php if($model->category !== null){echo $model->category->title;} ?>
+            <?php echo $model->category->title; ?>
         </div>
         <br>
         <a class=""

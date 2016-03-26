@@ -22,10 +22,19 @@ use yii\db\ActiveRecord;
 class Post extends ActiveRecord
 {
 
+    /**
+     *
+     */
     const STATUS_PRIVATE = 2;
 
+    /**
+     *
+     */
     const STATUS_PUBLISH = 1;
 
+    /**
+     *
+     */
     const STATUS_DRAFT = 0;
 
     /**
@@ -74,7 +83,7 @@ class Post extends ActiveRecord
         return [
             [['title', 'anons', 'content', 'status'], 'required'],
             [['anons', 'content', 'slug'], 'string'],
-            [['status','category_id'], 'integer'],
+            [['status', 'category_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
             ['title', 'duplicateTitle'],
@@ -97,12 +106,15 @@ class Post extends ActiveRecord
         ];
     }
 
+    /**
+     * @param $a
+     */
     public function duplicateTitle($a)
     {
-        $record = $this::find()->select(['title','slug'])
-                               ->where('title =:name', [':name' => $this->title])
-                               ->orWhere('slug =:slug', [':slug' => $this->slug])
-                               ->one();
+        $record = $this::find()->select(['title', 'slug'])
+            ->where('title =:name', [':name' => $this->title])
+            ->orWhere('slug =:slug', [':slug' => $this->slug])
+            ->one();
         if ($record !== null) {
             if ($this->isNewRecord) {
                 $errorMsg = 'Имя уже используется';
@@ -116,25 +128,50 @@ class Post extends ActiveRecord
             $this->addError('password',$errorMsg);
         }*/
     }
+
     /**
      * $p = Post::find()->where(['id'=>3])->one();
-       $r = $p->category;
-       $r;
+     * $r = $p->category;
+     * $r;
      * @return \yii\db\ActiveQuery
      */
     public function getCategory()
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
+
+    /**
+     * @return $this
+     */
+    public function getAllPosts()
+    {
+
+        return $this::find()->select(['id', 'slug', 'title', 'created_at', 'anons', 'status', 'category_id'])->with('category')->where('status=1')->orderBy('id DESC');
+    }
+
+    /**
+     * @param $slug
+     * @return array|null|ActiveRecord
+     */
+    public function getOnePost($slug)
+    {
+        $id = $this::find()->select('id')->where('slug = :name AND status = 1', [':name' => $slug])->one();
+        if (!$id) {
+            return null;
+        }
+        return $this::find()->select(['id', 'slug', 'title', 'created_at', 'anons', 'status', 'category_id'])->where('id =' . $id->id)->one();
+    }
+
     /**
      * ConclusionPosts relate of type
      * echo count($model->conclusionPosts($model::STATUS_PUBLISH)).'<br>';
-       echo count($model->conclusionPosts($model::STATUS_DRAFT)).'<br>';
-       echo count($model->conclusionPosts($model::STATUS_PRIVATE)).'<br>';
+     * echo count($model->conclusionPosts($model::STATUS_DRAFT)).'<br>';
+     * echo count($model->conclusionPosts($model::STATUS_PRIVATE)).'<br>';
      * @param $type
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function conclusionPosts($type){
-        return $allRecords = $this::find()->where(['status'=>$type])->all();
+    public function conclusionPosts($type)
+    {
+        return $allRecords = $this::find()->where(['status' => $type])->all();
     }
 }

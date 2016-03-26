@@ -62,7 +62,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getAllCategories()
     {
-        return $this->find()->select(['id', 'title'])->orderBy('title')->all();
+        return $this->find()->select(['id', 'title'])->with('posts')->orderBy('title')->all();
     }
 
     /**
@@ -71,11 +71,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getPostsFromCategory($id)
     {
-        if ($this->find()->where(['id' => $id])->one() === null) {
-            return null;
-        } else {
-            return $this->findOne([$id])->posts;
-        }
+        return $this->find()->select(['id', 'title'])->with('posts')->where(['id' => $id])->one();
     }
 
     /**
@@ -84,10 +80,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getName($id)
     {
-        if ($this->find()->where(['id' => $id])->one() === null) {
-            return null;
-        }
-        return $this->find()->where(['id' => $id])->one()->title;
+        return $this->find()->select(['id', 'title'])->where(['id' => $id])->one()->title;
     }
 
 }

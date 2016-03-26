@@ -18,7 +18,9 @@
         }*/
         ?>
     </div>
-    <button id="toTop">Наверх</button>
+    <?php if(Yii::$app->params['devicedetect']['isDesktop']){?>
+         <button id="toTop">Наверх</button>
+    <?php }?>
 <?php echo $this->renderFile('@app/modules/index/views/layouts/footer.php'); ?>
 
 <?php $this->endContent(); ?>

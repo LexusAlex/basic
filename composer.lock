@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3408a1af4b22159720ba6209e78d70fd",
-    "content-hash": "937a4287d8f02113e867c1113be60329",
+    "hash": "769c23dd6b8ff7b8757e6dc12662909f",
+    "content-hash": "e077e642154288f2f4883ebca6d0de62",
     "packages": [
         {
             "name": "2amigos/yii2-disqus-widget",
@@ -62,6 +62,54 @@
                 "yii2"
             ],
             "time": "2015-03-19 11:20:02"
+        },
+        {
+            "name": "alexandernst/yii2-device-detect",
+            "version": "0.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alexandernst/yii2-device-detect.git",
+                "reference": "efb05131d0303c8d4ee19d6476d06d031ef88ad9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alexandernst/yii2-device-detect/zipball/efb05131d0303c8d4ee19d6476d06d031ef88ad9",
+                "reference": "efb05131d0303c8d4ee19d6476d06d031ef88ad9",
+                "shasum": ""
+            },
+            "require": {
+                "mobiledetect/mobiledetectlib": "~2.8",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "alexandernst\\devicedetect\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU General Public License v3"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Nestorov",
+                    "email": "alexandernst@gmail.com"
+                }
+            ],
+            "description": "Yii2 extension for Mobile-Detect library",
+            "keywords": [
+                "desktop",
+                "detect",
+                "device",
+                "extension",
+                "mobile",
+                "phone",
+                "tablet",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-04-22 23:30:31"
         },
         {
             "name": "bower-asset/jquery",
@@ -576,6 +624,60 @@
                 "yii"
             ],
             "time": "2015-07-03 07:08:52"
+        },
+        {
+            "name": "mobiledetect/mobiledetectlib",
+            "version": "2.8.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serbanghita/Mobile-Detect.git",
+                "reference": "d772569880e7becaec564274a3b93501b3fde700"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/d772569880e7becaec564274a3b93501b3fde700",
+                "reference": "d772569880e7becaec564274a3b93501b3fde700",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "johnkary/phpunit-speedtrap": "~1.0@dev",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Mobile_Detect.php"
+                ],
+                "psr-0": {
+                    "Detection": "namespaced/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Serban Ghita",
+                    "email": "serbanghita@gmail.com",
+                    "homepage": "http://mobiledetect.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+            "homepage": "https://github.com/serbanghita/Mobile-Detect",
+            "keywords": [
+                "detect mobile devices",
+                "mobile",
+                "mobile detect",
+                "mobile detector",
+                "php mobile detect"
+            ],
+            "time": "2016-03-24 09:06:37"
         },
         {
             "name": "nezhelskoy/yii2-highlight",

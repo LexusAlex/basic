@@ -87,10 +87,11 @@ class DefaultController extends Controller
             'activePageCssClass' => 'current',
             'maxButtonCount' => 3,
         ]);
+        $post = new Post();
         $dataProvider = new ActiveDataProvider([
-            'query' => Post::find()->where('status=1')->orderBy('id DESC'),
+            'query' => $post->getAllPosts(),
             'pagination' => [
-                'pageSize' => 5,
+                'pageSize' => 10,
                 'pageSizeParam' => false,
             ],
         ]);
@@ -121,7 +122,8 @@ class DefaultController extends Controller
      */
     public function actionView($slug)
     {
-        $model = Post::find()->where('slug = :name AND status = 1', [':name' => $slug])->one();
+        $post = new Post();
+        $model = $post->getOnePost($slug);
         if ($model !== null) {
             $this->view->title = $model->title;
             $this->view->registerMetaTag(['name' => 'description','content' => $model->title]);
@@ -196,10 +198,10 @@ class DefaultController extends Controller
         if ($posts == null) {
             throw new NotFoundHttpException('The requested post does not exist.');
         }
-
-        $this->view->title = 'Записи в категории ' . $c->getName($id);
-        $this->view->registerMetaTag(['name' => 'description','content' => 'Записи в категории '. $c->getName($id)]);
-        $this->view->registerMetaTag(['name' => 'keywords','content' => $c->getName($id)]);
+        $name = $c->getName($id);
+        $this->view->title = 'Записи в категории ' .$name;
+        $this->view->registerMetaTag(['name' => 'description','content' => 'Записи в категории '. $name]);
+        $this->view->registerMetaTag(['name' => 'keywords','content' => $name]);
         return $this->render('categories', ['posts' => $posts]);
     }
 
