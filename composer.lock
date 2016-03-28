@@ -246,16 +246,16 @@
         },
         {
             "name": "bower-asset/mmenu",
-            "version": "v5.6.2",
+            "version": "v5.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FrDH/jQuery.mmenu.git",
-                "reference": "e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966"
+                "reference": "c0692f92c071c25f2482b449702d800ccde2c4e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FrDH/jQuery.mmenu/zipball/e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966",
-                "reference": "e84bf532f9b0e56ac1d7f1fcccf71efeb22f9966",
+                "url": "https://api.github.com/repos/FrDH/jQuery.mmenu/zipball/c0692f92c071c25f2482b449702d800ccde2c4e4",
+                "reference": "c0692f92c071c25f2482b449702d800ccde2c4e4",
                 "shasum": ""
             },
             "require": {

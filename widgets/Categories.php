@@ -18,9 +18,6 @@ class Categories extends Widget
     public function run()
     {
         $model = new Category();
-        $allCategories = $model->getAllCategories();
-        foreach($allCategories as $v){
-            echo Html::a($v->title,['default/category','id'=>$v->id]).' ('.count($v->posts).')'.'<br>';
-        }
+        $model->viewCategories();
     }
 }
